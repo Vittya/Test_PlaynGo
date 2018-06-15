@@ -1,0 +1,13 @@
+{
+  "name": "helloWorld",
+  "version": "1.0.0",
+  "description": "",
+  "author": "name",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^2.5.3"
+  },
+  "dependencies": {
+    "@types/pixi.js": "^4.7.5"
+  }
+}

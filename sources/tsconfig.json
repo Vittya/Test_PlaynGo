@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"module": "amd",
+		"target": "es6",
+		"outFile": "../bin/app.js",
+		"sourceMap": true,
+        "watch": true,
+		"noImplicitAny": true,
+		"noImplicitReturns": true,
+		"skipDefaultLibCheck": true,
+		"removeComments": true,
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": [
+		"App.ts"
+		//"**/*"
+	],
+	"exclude": [
+	]
+}
+
