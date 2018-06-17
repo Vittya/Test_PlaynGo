@@ -10,7 +10,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Jelenet = /** @class */ (function (_super) {
+var View = /** @class */ (function (_super) {
     __extends(Jelenet, _super);
     function Jelenet() {
         var _this = _super.call(this) || this;
@@ -33,4 +33,4 @@ var Jelenet = /** @class */ (function (_super) {
     };
     return Jelenet;
 }(PIXI.Container));
-exports.Jelenet = Jelenet;
+exports.Jelenet = View;

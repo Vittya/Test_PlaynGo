@@ -1,12 +1,12 @@
-import {Jelenet} from "./Jelenet";
-import {JelenetManager} from "./JelenetManager";
+import {View} from "./View";
+import {ViewProvider} from "./ViewProvider";
 
-export class Splash extends Jelenet{
+export class Splash extends View{
 
     private logo:PIXI.Sprite;
     constructor(){
         super();
-        this.logo=PIXI.Sprite.fromImage("kp/bcube.png");
+        this.logo=PIXI.Sprite.fromImage("kp/mini_logo.png");
         this.addChild(this.logo);
         this.logo.anchor.x=0.5;
         this.logo.anchor.y=0.5;
@@ -18,7 +18,7 @@ export class Splash extends Jelenet{
     public update():void {
         super.update();
         if (this.logo.alpha < 1) this.logo.alpha += 0.01;
-        else JelenetManager.startJelenet('menu');
+        else ViewProvider.startJelenet('menu');
     }
 
 }

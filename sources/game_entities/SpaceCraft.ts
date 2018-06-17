@@ -1,4 +1,4 @@
-import {Vektor} from "../eszk/Vektor";
+
 
 export abstract class SpaceCraft{
 
@@ -6,7 +6,7 @@ export abstract class SpaceCraft{
     private _sprite:PIXI.Sprite;
 
 
-    public position: Vektor = new Vektor();
+
 
 
     constructor(t:PIXI.Texture){

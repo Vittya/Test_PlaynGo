@@ -1,27 +1,27 @@
-import { Jelenet } from "./game/Jelenet";
-import {JelenetManager} from "./game/JelenetManager";
+import { View } from "./game/View";
+import {ViewProvider} from "./game/ViewProvider";
 import {DaGame} from "./game/DaGame";
 import {Splash} from "./game/Splash";
 import {Menu} from "./game/Menu";
 import {GameOver} from "./game/GameOver";
 
 class App {
-	private _game: Jelenet;
+	private _game: View;
 
 
     constructor() {
         console.log('Hello World');
 
-        //this._game = new Jelenet();
+        //this._game = new View();
 
 
-        JelenetManager.onCreate(800,600);
+        ViewProvider.onCreate(800,600);
 
-        JelenetManager.initJelenet("splash",Splash);
-        JelenetManager.initJelenet("menu",Menu);
-        JelenetManager.initJelenet("játék",DaGame);
-        JelenetManager.initJelenet("GO",GameOver);
-        JelenetManager.startJelenet("splash");
+        ViewProvider.initJelenet("splash",Splash);
+        ViewProvider.initJelenet("menu",Menu);
+        ViewProvider.initJelenet("játék",DaGame);
+        ViewProvider.initJelenet("GO",GameOver);
+        ViewProvider.startJelenet("splash");
 
         /*const renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x000000});
         document.body.appendChild(renderer.view);

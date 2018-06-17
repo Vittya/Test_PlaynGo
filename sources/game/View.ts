@@ -1,4 +1,4 @@
-export class Jelenet extends PIXI.Container{
+export class View extends PIXI.Container{
 	private isPaused:boolean = false;
 	private updateThisShit = function(){};
 

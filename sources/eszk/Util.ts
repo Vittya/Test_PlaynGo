@@ -1,5 +1,4 @@
-import {Bounding} from "../game_entities/Bounding";
-import {Vektor} from "./Vektor";
+
 
 export class Util {
 
@@ -82,14 +81,14 @@ export class Util {
 
     }
 
-    public static excuse4SAT(ax:number,ay:number,bx:number,by:number): boolean {
+    public static excuse4SAT(ax:number,ay:number,bx:number,by:number,as:number,bs:number): boolean {
         let A=(ax - bx);
         let B=(ay - by);
         let C=A*A+B*B;
 
         let divergent = Math.sqrt(C);
 
-        return (divergent < 20 + 20);
+        return (divergent < as + bs);
     }
 }
 

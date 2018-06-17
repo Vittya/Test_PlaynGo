@@ -5,8 +5,6 @@ export class HiggsBozon extends PIXI.Graphics{
     public y:number;
     private cX:number;
     private cY:number;
-    private sX:number;
-    private sY:number;
     private alfa:number=100;
     private graphix:PIXI.Graphics;
 
@@ -20,7 +18,6 @@ export class HiggsBozon extends PIXI.Graphics{
         this.y=y;
         this.graphix = new PIXI.Graphics();
         this.graphix.beginFill(0x444,this.alfa);
-        //this.graphix.rotation=r;
         this.graphix.drawCircle(x,y,2);
         this.graphix.endFill();
 
@@ -34,7 +31,6 @@ export class HiggsBozon extends PIXI.Graphics{
 
 
         this.alfa-=10;
-        //this.graphix.updateLocalBounds();
         this.graphix.alpha=this.alfa;
 
 

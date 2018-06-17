@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Jelenet_1 = require("./Jelenet");
-var JelenetManager = /** @class */ (function () {
+var ViewProvider = /** @class */ (function () {
     function JelenetManager() {
     }
     //érdekelne h itt mi a visszatérési érték fajtája...ez lenne az any??
@@ -44,4 +44,4 @@ var JelenetManager = /** @class */ (function () {
     JelenetManager.jelentTMB = {};
     return JelenetManager;
 }());
-exports.JelenetManager = JelenetManager;
+exports.JelenetManager = ViewProvider;

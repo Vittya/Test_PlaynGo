@@ -1,8 +1,8 @@
 export class MahButton extends PIXI.Sprite {
 
-        private _text: PIXI.Text;
+        private pTxt: PIXI.Text;
 
-        private _cb: Function;
+        private callback: Function;
 
         constructor(x: number, y: number, width: number, height: number) {
             super();
@@ -10,26 +10,22 @@ export class MahButton extends PIXI.Sprite {
         }
 
         onCreate(x: number, y: number, width: number, height: number) {
-            // generate the texture
-            let gfx = new PIXI.Graphics();
-            gfx.beginFill(0xffffff, 1);
-            gfx.drawRoundedRect(0, 0, width, height, height / 5);
-            gfx.endFill();
-            this.texture = gfx.generateCanvasTexture();
+            let g = new PIXI.Graphics();
+            g.beginFill(0x738073, 1);
+            g.drawRoundedRect(0, 0, width, height, height / 5);
+            g.endFill();
+            this.texture = g.generateCanvasTexture();
 
-            // set the x, y and anchor
             this.x = x;
             this.y = y;
             this.anchor.x = 0.5;
             this.anchor.y = 0.5;
 
-            // create the text object
-            this._text = new PIXI.Text("");
-            this._text.anchor.x = 0.5;
-            this._text.anchor.y = 0.5;
-            this.addChild(this._text);
+            this.pTxt = new PIXI.Text("");
+            this.pTxt.anchor.x = 0.5;
+            this.pTxt.anchor.y = 0.5;
+            this.addChild(this.pTxt);
 
-            // set the interactivity to true and assign callback functions
             this.interactive = true;
 
             this.on("mousedown", () => {
@@ -41,7 +37,7 @@ export class MahButton extends PIXI.Sprite {
             }, this);
 
             this.on("mouseover", () => {
-                this.onHover();
+                this.onTouch();
             }, this);
 
             this.on("mouseout", () => {
@@ -50,47 +46,41 @@ export class MahButton extends PIXI.Sprite {
         }
 
         public setText(val: string, style?: PIXI.TextStyle) {
-            // Set text to be the value passed as a parameter
-            this._text.text = val;
-            // Set style of text to the style passed as a parameter
-            this._text.style = style;
+            this.pTxt.text = val;
+            this.pTxt.style = style;
         }
 
         private onDown() {
-            console.log('Clicked');
             this.y += 5;
-            this.tint = 0xffffff;
+            this.tint = 0xC60000;
         }
 
         private onUp() {
-            console.log('onup');
-            if(typeof(this._cb) === 'function') {
-                this._cb();
+            if(typeof(this.callback) === 'function') {
+                this.callback();
             }
             this.y -= 5;
-            this.tint = 0xF8A9F9;
+            this.tint = 0xF8F8F8;
         }
 
-        private onHover() {
-            console.log('On Hover');
-            this.tint = 0xF8A9F9;
+        private onTouch() {
+            this.tint = 0xFF0000;
             this.scale.x = 1.2;
             this.scale.y = 1.2;
         }
 
         private onOut() {
-            console.log('On Out');
-            this.tint = 0xffffff;
+            this.tint = 0xF8F8F8;
             this.scale.x = 1;
             this.scale.y = 1;
         }
 
         public get clicked() {
-            return this._cb;
+            return this.callback;
         }
 
         public set clicked(cb: Function) {
-            this._cb = cb;
+            this.callback = cb;
         }
 
 

@@ -10,18 +10,22 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var Background_1 = require("./Background");
-var Tavoli = /** @class */ (function (_super) {
-    __extends(Tavoli, _super);
-    function Tavoli() {
-        var _this = _super.call(this, PIXI.Texture.fromImage("kp/csillagok.png"), 800, 600) || this;
-        _this.tilinSprite().tilePosition.x = -100;
-        _this.tilinSprite().tilePosition.y = -100;
+var SpaceCraft_1 = require("./SpaceCraft");
+var Ship = /** @class */ (function (_super) {
+    __extends(Hajo, _super);
+    function Hajo() {
+        var _this = _super.call(this, PIXI.Texture.fromImage("kp/spsh.png")) || this;
+        _this.horgX = 0.5;
+        _this.horgY = 0.5;
+        _this.sprite().anchor.x = _this.horgX;
+        _this.sprite().anchor.y = _this.horgY;
+        _this.sprite().position.x = 100;
+        _this.sprite().position.y = 300;
         return _this;
     }
-    Tavoli.prototype.update = function () {
-        this.tilinSprite().tilePosition.x -= 0.128;
+    //@Override
+    Hajo.prototype.update = function () {
     };
-    return Tavoli;
-}(Background_1.Background));
-exports.Tavoli = Tavoli;
+    return Hajo;
+}(SpaceCraft_1.SpaceCraft));
+exports.Hajo = Ship;

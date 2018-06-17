@@ -51,15 +51,22 @@ var Util = /** @class */ (function () {
     Util.collision = function (a, b) {
         a.calculateBounds();
         b.calculateBounds();
-        var aX1 = a.getLocalBounds().x;
-        var aY1 = a.getLocalBounds().y;
-        var aX2 = a.getLocalBounds().x + a.getLocalBounds().width;
-        var aY2 = a.getLocalBounds().y - a.getLocalBounds().height;
-        var bX1 = b.getLocalBounds().x;
-        var bY1 = b.getLocalBounds().y;
-        var bX2 = b.getLocalBounds().x + b.getLocalBounds().width;
-        var bY2 = b.getLocalBounds().y - b.getLocalBounds().height;
-        return (aX1 < bX2 && aX2 > bX1 && aY1 > bY2 && aY2 < bY1);
+        var aX1 = a.getLocalBounds().left;
+        var aY1 = a.getLocalBounds().top;
+        var aX2 = a.getLocalBounds().right;
+        var aY2 = a.getLocalBounds().bottom;
+        var bX1 = b.getLocalBounds().left;
+        var bY1 = b.getLocalBounds().top;
+        var bX2 = b.getLocalBounds().right;
+        var bY2 = b.getLocalBounds().bottom;
+        return (aX1 < bX2 && aX2 > bX1 && aY1 < bY2 && aY2 > bY1);
+    };
+    Util.excuse4SAT = function (ax, ay, bx, by) {
+        var A = (ax - bx);
+        var B = (ay - by);
+        var C = A * A + B * B;
+        var divergent = Math.sqrt(C);
+        return (divergent < 20 + 20);
     };
     return Util;
 }());

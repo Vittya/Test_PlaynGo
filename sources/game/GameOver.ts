@@ -1,24 +1,23 @@
-import {JelenetManager} from "./JelenetManager";
-import {Jelenet} from "./Jelenet";
+import {ViewProvider} from "./ViewProvider";
+import {View} from "./View";
 
-export class GameOver extends Jelenet{
+export class GameOver extends View{
 
     private logo:PIXI.Sprite;
     constructor(){
         super();
-        this.logo=PIXI.Sprite.fromImage("kp/bcube.png");
+        this.logo=PIXI.Sprite.fromImage("kp/endscreen.jpg");
         this.addChild(this.logo);
-        this.logo.anchor.x=0.5;
-        this.logo.anchor.y=0.5;
+
         this.logo.alpha=0;
-        this.logo.position.x=400;
-        this.logo.position.y=300;
+        this.logo.position.x=0;
+        this.logo.position.y=75;
     }
 
     public update():void {
         super.update();
-        if (this.logo.alpha < 1) this.logo.alpha += 0.01;
-        else JelenetManager.startJelenet('menu');
+        if (this.logo.alpha < 1) this.logo.alpha += 0.005;
+        else ViewProvider.startJelenet('menu');
     }
 
 }

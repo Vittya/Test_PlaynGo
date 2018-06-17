@@ -11,17 +11,17 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var Background_1 = require("./Background");
-var Kozeli = /** @class */ (function (_super) {
-    __extends(Kozeli, _super);
-    function Kozeli() {
-        var _this = _super.call(this, PIXI.Texture.fromImage("kp/törmelék.png"), 1800, 1600) || this;
+var Far = /** @class */ (function (_super) {
+    __extends(Tavoli, _super);
+    function Tavoli() {
+        var _this = _super.call(this, PIXI.Texture.fromImage("kp/csillagok.png"), 800, 600) || this;
         _this.tilinSprite().tilePosition.x = -100;
         _this.tilinSprite().tilePosition.y = -100;
         return _this;
     }
-    Kozeli.prototype.update = function () {
-        this.tilinSprite().tilePosition.x -= 0.64;
+    Tavoli.prototype.update = function () {
+        this.tilinSprite().tilePosition.x -= 0.128;
     };
-    return Kozeli;
+    return Tavoli;
 }(Background_1.Background));
-exports.Kozeli = Kozeli;
+exports.Tavoli = Far;

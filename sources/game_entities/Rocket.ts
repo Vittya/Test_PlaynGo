@@ -1,6 +1,6 @@
 import {SpaceCraft} from "./SpaceCraft";
 import {Util} from "../eszk/Util";
-import {Hajo} from "./Hajo";
+import {Ship} from "./Ship";
 import {Bounding} from "./Bounding";
 
 export class Rocket extends SpaceCraft{
@@ -9,6 +9,7 @@ export class Rocket extends SpaceCraft{
     private x:number;
     private y:number;
     public b:Bounding;
+    public isOutside:boolean=false;
 
     constructor(x:number,y:number,ss:PIXI.Container){
         super(PIXI.Texture.fromImage("kp/lvdk.png"));
@@ -19,11 +20,10 @@ export class Rocket extends SpaceCraft{
         this.sprite().position.y=y;
         this.x=x;
         this.y=y;
-        this.sprite().rotation=Hajo.aim;
-        this.angle=Hajo.aim;
-        this.b = new Bounding(this.sprite().x,this.sprite().y);
+        this.sprite().rotation=Ship.aim;
+        this.angle=Ship.aim;
+        this.b = new Bounding(this.sprite().x,this.sprite().y,1.5);
         this.ss.addChild(this.sprite());
-        //this.ss.addChild(this.b.grafix());
 
     }
 
@@ -31,12 +31,14 @@ export class Rocket extends SpaceCraft{
 
         this.sprite().position.x += Util.polarbolCart(10, this.angle)[0];
         this.sprite().position.y += Util.polarbolCart(10, this.angle)[1];
-        console.log("ROCKET UPDATE");
 
-        if(Math.abs(Util.cartbolPolar(this.sprite().position.x,this.sprite().position.y)[0]-
-            Util.cartbolPolar(this.x,this.y)[0])>1000000)
-            this.vege();
+        if (Math.abs(Util.cartbolPolar(this.sprite().position.x, this.sprite().position.y)[0] -
+            Util.cartbolPolar(this.x, this.y)[0]) > 300000){
 
+                this.vege();
+                this.isOutside=true;
+
+            }
 
         this.b.grafix().position.x=this.sprite().position.x;
         this.b.grafix().position.y=this.sprite().position.y;

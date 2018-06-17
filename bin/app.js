@@ -1,7 +1,7 @@
-define("game/Jelenet", ["require", "exports"], function (require, exports) {
+define("game/View", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Jelenet extends PIXI.Container {
+    class View extends PIXI.Container {
         constructor() {
             super();
             this.isPaused = false;
@@ -21,131 +21,51 @@ define("game/Jelenet", ["require", "exports"], function (require, exports) {
             return this.isPaused;
         }
     }
-    exports.Jelenet = Jelenet;
+    exports.View = View;
 });
-define("game/JelenetManager", ["require", "exports", "game/Jelenet"], function (require, exports, Jelenet_1) {
+define("game/ViewProvider", ["require", "exports", "game/View"], function (require, exports, View_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class JelenetManager {
+    class ViewProvider {
         static onCreate(sz, h) {
-            if (JelenetManager.renderer != null)
+            if (ViewProvider.renderer != null)
                 return this;
-            JelenetManager.renderer = PIXI.autoDetectRenderer(sz, h);
-            document.body.appendChild(JelenetManager.renderer.view);
-            requestAnimationFrame(JelenetManager.update);
+            ViewProvider.renderer = PIXI.autoDetectRenderer(sz, h);
+            document.body.appendChild(ViewProvider.renderer.view);
+            requestAnimationFrame(ViewProvider.update);
             return this;
         }
         static update() {
-            requestAnimationFrame(function () { JelenetManager.update(); });
-            if (!JelenetManager.mostJelenet || JelenetManager.mostJelenet.getIsPaused())
+            requestAnimationFrame(function () { ViewProvider.update(); });
+            if (!ViewProvider.mostJelenet || ViewProvider.mostJelenet.getIsPaused())
                 return;
-            JelenetManager.mostJelenet.update();
-            JelenetManager.renderer.render(JelenetManager.mostJelenet);
+            ViewProvider.mostJelenet.update();
+            ViewProvider.renderer.render(ViewProvider.mostJelenet);
         }
-        static initJelenet(id, J = Jelenet_1.Jelenet) {
+        static initJelenet(id, J = View_1.View) {
             let j = new J();
-            JelenetManager.jelentTMB[id] = j;
+            ViewProvider.jelentTMB[id] = j;
             return j;
         }
         static startJelenet(id) {
-            if (JelenetManager.jelentTMB[id]) {
-                JelenetManager.mostJelenet = JelenetManager.jelentTMB[id];
-                if (JelenetManager.jelentTMB[id])
-                    JelenetManager.mostJelenet.onPause();
-                JelenetManager.mostJelenet.onResume();
+            if (ViewProvider.jelentTMB[id]) {
+                ViewProvider.mostJelenet = ViewProvider.jelentTMB[id];
+                if (ViewProvider.jelentTMB[id])
+                    ViewProvider.mostJelenet.onPause();
+                ViewProvider.mostJelenet.onResume();
                 return true;
             }
             return false;
         }
     }
-    JelenetManager.jelentTMB = {};
-    exports.JelenetManager = JelenetManager;
+    ViewProvider.jelentTMB = {};
+    exports.ViewProvider = ViewProvider;
 });
-define("eszk/Vektor", ["require", "exports"], function (require, exports) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Vektor {
-        constructor(x = 0, y = 0) {
-            this.x = 0;
-            this.y = 0;
-            this.magnitude = () => {
-                return Math.sqrt(this.x * this.x + this.y * this.y);
-            };
-            this.magSq = () => {
-                return this.x * this.x + this.y * this.y;
-            };
-            this.normalize = () => {
-                var len = Math.sqrt(this.x * this.x + this.y * this.y);
-                this.x /= len;
-                this.y /= len;
-                return this;
-            };
-            this.zero = () => {
-                this.x = 0;
-                this.y = 0;
-            };
-            this.copy = (point) => {
-                this.x = point.x;
-                this.y = point.y;
-            };
-            this.duplicate = () => {
-                var dup = new Vektor(this.x, this.y);
-                return dup;
-            };
-            this.rotate = (radians) => {
-                var cos = Math.cos(radians);
-                var sin = Math.sin(radians);
-                var x = (cos * this.x) + (sin * this.y);
-                var y = (cos * this.y) - (sin * this.x);
-                this.x = x;
-                this.y = y;
-            };
-            this.rotate90 = () => {
-                var x = -this.y;
-                var y = this.x;
-                this.x = x;
-                this.y = y;
-            };
-            this.getAngle = () => {
-                return Math.atan2(this.x, this.y);
-            };
-            this.multiply = (value) => {
-                this.x *= value;
-                this.y *= value;
-            };
-            this.add = (value) => {
-                this.x += value.x;
-                this.y += value.y;
-            };
-            this.subtract = (value) => {
-                this.x -= value.x;
-                this.y -= value.y;
-            };
-            this.dot = (vec) => {
-                return this.x * vec.x + this.y * vec.y;
-            };
-            this.project = (onto) => {
-                var proj = this.duplicate();
-                var d = onto.magSq();
-                if (d != 0) {
-                    var mult = new Vektor(onto.x, onto.y);
-                    mult.multiply(proj.dot(onto) / d);
-                    return mult;
-                }
-                return onto;
-            };
-            this.x = x;
-            this.y = y;
-        }
-    }
-    exports.Vektor = Vektor;
-});
-define("game_entities/SpaceCraft", ["require", "exports", "eszk/Vektor"], function (require, exports, Vektor_1) {
+define("game_entities/SpaceCraft", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class SpaceCraft {
         constructor(t) {
-            this.position = new Vektor_1.Vektor();
             this.texture = t;
             this._sprite = new PIXI.Sprite(this.texture);
         }
@@ -154,29 +74,6 @@ define("game_entities/SpaceCraft", ["require", "exports", "eszk/Vektor"], functi
         }
     }
     exports.SpaceCraft = SpaceCraft;
-});
-define("game_entities/Bounding", ["require", "exports", "eszk/Vektor"], function (require, exports, Vektor_2) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Bounding extends PIXI.Graphics {
-        constructor(x, y) {
-            super();
-            this.alfa = 100;
-            this.circle = new Vektor_2.Vektor(x, y);
-            this.graphix = new PIXI.Graphics();
-            this.graphix.beginFill(0x444, this.alfa);
-            this.graphix.drawCircle(this.circle.x, this.circle.y, 20);
-            this.graphix.endFill();
-        }
-        update(x, y) {
-            this.graphix.position.x = x;
-            this.graphix.position.y = y;
-        }
-        grafix() {
-            return this.graphix;
-        }
-    }
-    exports.Bounding = Bounding;
 });
 define("eszk/Util", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -240,22 +137,60 @@ define("eszk/Util", ["require", "exports"], function (require, exports) {
             let bY2 = b.getLocalBounds().bottom;
             return (aX1 < bX2 && aX2 > bX1 && aY1 < bY2 && aY2 > bY1);
         }
-        static excuse4SAT(ax, ay, bx, by) {
+        static excuse4SAT(ax, ay, bx, by, as, bs) {
             let A = (ax - bx);
             let B = (ay - by);
             let C = A * A + B * B;
             let divergent = Math.sqrt(C);
-            return (divergent < 20 + 20);
+            return (divergent < as + bs);
         }
     }
     exports.Util = Util;
 });
-define("game_entities/Rocket", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util", "game_entities/Hajo", "game_entities/Bounding"], function (require, exports, SpaceCraft_1, Util_1, Hajo_1, Bounding_1) {
+define("eszk/Vektor", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Vektor {
+        constructor(x = 0, y = 0) {
+            this.x = 0;
+            this.y = 0;
+            this.x = x;
+            this.y = y;
+        }
+    }
+    exports.Vektor = Vektor;
+});
+define("game_entities/Bounding", ["require", "exports", "eszk/Vektor"], function (require, exports, Vektor_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Bounding extends PIXI.Graphics {
+        constructor(x, y, s) {
+            super();
+            this.alfa = 100;
+            this.circle = new Vektor_1.Vektor(x, y);
+            this.s = s;
+            this.graphix = new PIXI.Graphics();
+            this.graphix.beginFill(0x444, this.alfa);
+            this.graphix.drawCircle(this.circle.x, this.circle.y, 20);
+            this.graphix.endFill();
+        }
+        update(x, y) {
+            this.graphix.position.x = x;
+            this.graphix.position.y = y;
+        }
+        grafix() {
+            return this.graphix;
+        }
+    }
+    exports.Bounding = Bounding;
+});
+define("game_entities/Rocket", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util", "game_entities/Ship", "game_entities/Bounding"], function (require, exports, SpaceCraft_1, Util_1, Ship_1, Bounding_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Rocket extends SpaceCraft_1.SpaceCraft {
         constructor(x, y, ss) {
             super(PIXI.Texture.fromImage("kp/lvdk.png"));
+            this.isOutside = false;
             this.ss = ss;
             this.sprite().anchor.x = 0.5;
             this.sprite().anchor.y = 0.5;
@@ -263,18 +198,19 @@ define("game_entities/Rocket", ["require", "exports", "game_entities/SpaceCraft"
             this.sprite().position.y = y;
             this.x = x;
             this.y = y;
-            this.sprite().rotation = Hajo_1.Hajo.aim;
-            this.angle = Hajo_1.Hajo.aim;
-            this.b = new Bounding_1.Bounding(this.sprite().x, this.sprite().y);
+            this.sprite().rotation = Ship_1.Ship.aim;
+            this.angle = Ship_1.Ship.aim;
+            this.b = new Bounding_1.Bounding(this.sprite().x, this.sprite().y, 1.5);
             this.ss.addChild(this.sprite());
         }
         update() {
             this.sprite().position.x += Util_1.Util.polarbolCart(10, this.angle)[0];
             this.sprite().position.y += Util_1.Util.polarbolCart(10, this.angle)[1];
-            console.log("ROCKET UPDATE");
             if (Math.abs(Util_1.Util.cartbolPolar(this.sprite().position.x, this.sprite().position.y)[0] -
-                Util_1.Util.cartbolPolar(this.x, this.y)[0]) > 1000000)
+                Util_1.Util.cartbolPolar(this.x, this.y)[0]) > 300000) {
                 this.vege();
+                this.isOutside = true;
+            }
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
         }
@@ -318,20 +254,38 @@ define("large_hadron_collider/HiggsBozon", ["require", "exports", "eszk/Util"], 
     }
     exports.HiggsBozon = HiggsBozon;
 });
-define("game_entities/Hajo", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util", "game_entities/Rocket", "game/JelenetManager", "eszk/Vektor", "large_hadron_collider/HiggsBozon", "game_entities/Bounding"], function (require, exports, SpaceCraft_2, Util_3, Rocket_1, JelenetManager_1, Vektor_3, HiggsBozon_1, Bounding_2) {
+define("large_hadron_collider/Explosion", ["require", "exports", "game_entities/SpaceCraft"], function (require, exports, SpaceCraft_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Hajo extends SpaceCraft_2.SpaceCraft {
+    class Explosion extends SpaceCraft_2.SpaceCraft {
+        constructor(x, y, s) {
+            super(PIXI.Texture.fromImage("kp/image823.png"));
+            if (s != null)
+                this.ss = s;
+            this.sprite().position.x = x;
+            this.sprite().position.y = y;
+            this.ss.addChild(this.sprite());
+        }
+        update() {
+            this.sprite().alpha = 1;
+            this.sprite().rotation++;
+        }
+    }
+    exports.Explosion = Explosion;
+});
+define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util", "game_entities/Rocket", "game/ViewProvider", "large_hadron_collider/HiggsBozon", "game_entities/Bounding", "large_hadron_collider/Explosion"], function (require, exports, SpaceCraft_3, Util_3, Rocket_1, ViewProvider_1, HiggsBozon_1, Bounding_2, Explosion_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    class Ship extends SpaceCraft_3.SpaceCraft {
         constructor(s) {
-            super(PIXI.Texture.fromImage("kp/spsh.png"));
-            this.speed = 0;
+            super(PIXI.Texture.fromImage("kp/ufo.png"));
             this.tar = [];
             this.end = false;
             this.bozon = new Array(30);
-            this.acceleration = new Vektor_3.Vektor(0, 0);
-            this.direction = new Vektor_3.Vektor(1, 0);
-            this.filler = new Vektor_3.Vektor(0, 0);
-            this.b = new Bounding_2.Bounding(this.sprite().x, this.sprite().y);
+            this.m = 10;
+            this.d = 9;
+            this.n = 2;
+            this.b = new Bounding_2.Bounding(this.sprite().x, this.sprite().y, 20);
             this.ss = s;
             this.horgX = 0.5;
             this.horgY = 0.5;
@@ -342,19 +296,19 @@ define("game_entities/Hajo", ["require", "exports", "game_entities/SpaceCraft", 
             this.agyu = new PIXI.particles.ParticleContainer();
             const someFunc = () => {
                 this.rocket = new Rocket_1.Rocket(this.sprite().position.x, this.sprite().position.y, this.agyu);
-                Hajo.aim = this.iranybaFordul(this.sprite().position.x, this.sprite().position.y);
+                Ship.aim = this.turnInPosition(this.sprite().position.x, this.sprite().position.y);
                 this.tar.push(this.rocket);
             };
-            s.addChild(this.sprite());
             s.addChild(this.agyu);
             s.addChild(this.b.grafix());
+            s.addChild(this.sprite());
             this.ss.on("mousedown", someFunc, this.ss);
         }
         update() {
             this.fire();
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
-            Hajo.aim = this.iranybaFordul(this.sprite().position.x, this.sprite().position.y);
+            Ship.aim = this.turnInPosition(this.sprite().position.x, this.sprite().position.y);
             for (let i = 0; i < 30; i++) {
                 if (this.bozon[i]) {
                     this.bozon[i].update();
@@ -370,9 +324,6 @@ define("game_entities/Hajo", ["require", "exports", "game_entities/SpaceCraft", 
             if (this.sprite().rotation < 0) {
                 this.sprite().rotation += Math.PI * 2;
             }
-            this.direction.x = 1;
-            this.direction.y = 0;
-            this.direction.rotate(-this.sprite().rotation);
         }
         getB() {
             return this.b;
@@ -389,17 +340,33 @@ define("game_entities/Hajo", ["require", "exports", "game_entities/SpaceCraft", 
         }
         fire() {
             for (var b = this.tar.length - 1; b >= 0; b--) {
-                this.tar[b].update();
+                if (this.tar[b] != undefined && this.tar[b].isOutside == false)
+                    this.tar[b].update();
             }
         }
-        iranybaFordul(x, y) {
-            let tavY = JelenetManager_1.JelenetManager.renderer.plugins.interaction.mouse.global.y - y;
-            let tavX = JelenetManager_1.JelenetManager.renderer.plugins.interaction.mouse.global.x - x;
+        turnInPosition(x, y) {
+            let tavY = ViewProvider_1.ViewProvider.renderer.plugins.interaction.mouse.global.y - y;
+            let tavX = ViewProvider_1.ViewProvider.renderer.plugins.interaction.mouse.global.x - x;
             let szg = Util_3.Util.cartbolPolar(tavX, tavY)[1];
             return szg;
         }
+        emitter() {
+            for (let q = 0; q < Math.PI * this.d; q += 0.2) {
+                let k = this.n / this.d;
+                let s = Math.cos(k * q) * this.m;
+                new Explosion_1.Explosion(Util_3.Util.polarbolCart(s, q)[0] + this.sprite().position.x, Util_3.Util.polarbolCart(s, q)[1] + this.sprite().position.y, this.ss).update();
+            }
+            this.m += 10;
+            var ii = setTimeout(() => this.emitter(), 200);
+            if (this.m > 100) {
+                this.sprite().interactive = false;
+                this.ss.removeChildren(3);
+                this.end = true;
+                clearTimeout(ii);
+            }
+        }
     }
-    exports.Hajo = Hajo;
+    exports.Ship = Ship;
 });
 define("game_entities/Background", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -415,10 +382,10 @@ define("game_entities/Background", ["require", "exports"], function (require, ex
     }
     exports.Background = Background;
 });
-define("game_entities/Tavoli", ["require", "exports", "game_entities/Background"], function (require, exports, Background_1) {
+define("game_entities/Far", ["require", "exports", "game_entities/Background"], function (require, exports, Background_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Tavoli extends Background_1.Background {
+    class Far extends Background_1.Background {
         constructor(s) {
             super(PIXI.Texture.fromImage("kp/törmelék.png"), 800, 600);
             this.tilinSprite().tilePosition.x = -100;
@@ -429,12 +396,12 @@ define("game_entities/Tavoli", ["require", "exports", "game_entities/Background"
             this.tilinSprite().tilePosition.x -= 0.64;
         }
     }
-    exports.Tavoli = Tavoli;
+    exports.Far = Far;
 });
-define("game_entities/Kozeli", ["require", "exports", "game_entities/Background"], function (require, exports, Background_2) {
+define("game_entities/Close", ["require", "exports", "game_entities/Background"], function (require, exports, Background_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Kozeli extends Background_2.Background {
+    class Close extends Background_2.Background {
         constructor(s) {
             super(PIXI.Texture.fromImage("kp/messziHttr.jpg"), 1800, 1600);
             this.tilinSprite().tilePosition.x = -100;
@@ -445,32 +412,7 @@ define("game_entities/Kozeli", ["require", "exports", "game_entities/Background"
             this.tilinSprite().tilePosition.x -= 0.128;
         }
     }
-    exports.Kozeli = Kozeli;
-});
-define("large_hadron_collider/Impulse", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util"], function (require, exports, SpaceCraft_3, Util_4) {
-    "use strict";
-    Object.defineProperty(exports, "__esModule", { value: true });
-    class Impulse extends SpaceCraft_3.SpaceCraft {
-        constructor(s, x, y) {
-            super(PIXI.Texture.fromImage("kp/bcube.png"));
-            this.sprite().anchor.x = 0.5;
-            this.sprite().anchor.y = 0.5;
-            this.sprite().position.x = 900;
-            this.sprite().position.y = Util_4.Util.vltln(500, 100);
-            this.sprite().alpha = 1;
-            this.s = s;
-            this.s.addChild(this.sprite());
-        }
-        update() {
-            this.sprite().position.x--;
-            if (this.sprite().alpha < 0)
-                this.vege();
-        }
-        vege() {
-            this.s.removeChild(this.sprite());
-        }
-    }
-    exports.Impulse = Impulse;
+    exports.Close = Close;
 });
 define("eszk/EZkey", ["require", "exports"], function (require, exports) {
     "use strict";
@@ -507,67 +449,79 @@ define("eszk/EZkey", ["require", "exports"], function (require, exports) {
     }
     exports.EZkey = EZkey;
 });
-define("game_entities/ai/Enemy", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util", "eszk/Vektor", "game_entities/Bounding"], function (require, exports, SpaceCraft_4, Util_5, Vektor_4, Bounding_3) {
+define("game_entities/enemy/Enemy", ["require", "exports", "game_entities/SpaceCraft", "eszk/Util", "game_entities/Bounding", "large_hadron_collider/Explosion"], function (require, exports, SpaceCraft_4, Util_4, Bounding_3, Explosion_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Enemy extends SpaceCraft_4.SpaceCraft {
         constructor(s) {
-            super(PIXI.Texture.fromImage("kp/ruler.png"));
-            this.preX = 800;
-            this.acceleration = new Vektor_4.Vektor(0, 0);
-            this.direction = new Vektor_4.Vektor(1, 0);
-            this.filler = new Vektor_4.Vektor(0, 0);
+            super(PIXI.Texture.fromImage("kp/enemy.png"));
+            this.ar = [];
+            this.m = 50;
+            this.d = 1;
+            this.n = 2;
             this.sprite().anchor.x = 0.5;
             this.sprite().anchor.y = 0.5;
             this.preY = this.sprite().position.y;
-            this.b = new Bounding_3.Bounding(this.sprite().x, this.sprite().y);
+            this.b = new Bounding_3.Bounding(this.sprite().x, this.sprite().y, 20);
+            this.ps = new PIXI.particles.ParticleContainer();
             this.sprite().position.x = 800;
             this.sprite().position.y = 300;
             this.s = s;
-            this.s.addChild(this.b.grafix());
+            this.s.addChild(this.ps);
+            this.s.addChild(this.sprite());
         }
         update() {
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
             this.sprite().position.x--;
-            this.sprite().position.y += Util_5.Util.vltln(-2, 2);
+            this.sprite().position.y += Math.sin(Util_4.Util.vltln(-10, 10)) * 5;
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
         }
         vege() {
-            this.s.removeChild(this.b.grafix());
+            for (let q = 0; q < Math.PI * this.d; q += 0.1) {
+                let k = this.n / this.d;
+                let s = Math.cos(k * q) * this.m;
+                this.ar.push(new Explosion_2.Explosion(Util_4.Util.polarbolCart(s, q)[0] + this.sprite().position.x, Util_4.Util.polarbolCart(s, q)[1] + this.sprite().position.y, this.s));
+            }
+            this.m += 10;
+            var ii = setTimeout(() => this.vege(), 20);
+            if (this.m > 100) {
+                this.s.removeChild(this.sprite());
+                for (let i = 0; i < this.ar.length; i++)
+                    this.s.removeChild(this.ar[i].sprite());
+                clearTimeout(ii);
+            }
         }
     }
     exports.Enemy = Enemy;
 });
-define("game/GameOver", ["require", "exports", "game/JelenetManager", "game/Jelenet"], function (require, exports, JelenetManager_2, Jelenet_2) {
+define("game/GameOver", ["require", "exports", "game/ViewProvider", "game/View"], function (require, exports, ViewProvider_2, View_2) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class GameOver extends Jelenet_2.Jelenet {
+    class GameOver extends View_2.View {
         constructor() {
             super();
-            this.logo = PIXI.Sprite.fromImage("kp/bcube.png");
+            this.logo = PIXI.Sprite.fromImage("kp/endscreen.jpg");
             this.addChild(this.logo);
-            this.logo.anchor.x = 0.5;
-            this.logo.anchor.y = 0.5;
             this.logo.alpha = 0;
-            this.logo.position.x = 400;
-            this.logo.position.y = 300;
+            this.logo.position.x = 0;
+            this.logo.position.y = 75;
         }
         update() {
             super.update();
             if (this.logo.alpha < 1)
-                this.logo.alpha += 0.01;
+                this.logo.alpha += 0.005;
             else
-                JelenetManager_2.JelenetManager.startJelenet('menu');
+                ViewProvider_2.ViewProvider.startJelenet('menu');
         }
     }
     exports.GameOver = GameOver;
 });
-define("game/DaGame", ["require", "exports", "game/Jelenet", "game_entities/Hajo", "game_entities/Tavoli", "game_entities/Kozeli", "eszk/Util", "eszk/EZkey", "game_entities/ai/Enemy", "game/JelenetManager", "game/GameOver"], function (require, exports, Jelenet_3, Hajo_2, Tavoli_1, Kozeli_1, Util_6, EZkey_1, Enemy_1, JelenetManager_3, GameOver_1) {
+define("game/DaGame", ["require", "exports", "game/View", "game_entities/Ship", "game_entities/Far", "game_entities/Close", "eszk/Util", "eszk/EZkey", "game_entities/enemy/Enemy", "game/ViewProvider", "game/GameOver"], function (require, exports, View_3, Ship_2, Far_1, Close_1, Util_5, EZkey_1, Enemy_1, ViewProvider_3, GameOver_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class DaGame extends Jelenet_3.Jelenet {
+    class DaGame extends View_3.View {
         constructor() {
             super();
             this.delta = 0;
@@ -578,70 +532,60 @@ define("game/DaGame", ["require", "exports", "game/Jelenet", "game_entities/Hajo
             this.input.addKey(37, () => this.hajo.lateralThrust(-0.1));
             this.input.addKey(39, () => this.hajo.lateralThrust(0.1));
             this.i = 0;
-            this.kozeli = new Kozeli_1.Kozeli(this);
-            this.tavoli = new Tavoli_1.Tavoli(this);
-            this.hajo = new Hajo_2.Hajo(this);
+            this.kozeli = new Close_1.Close(this);
+            this.tavoli = new Far_1.Far(this);
+            this.hajo = new Ship_2.Ship(this);
             this.interactive = true;
+            setTimeout(() => this.emitter(), 2000);
         }
         update() {
             super.update();
             this.delta = (new Date().getTime() - this.preDelta) / 1000;
             this.preDelta = Date.now();
-            setTimeout(this.emitter(), 10000);
+            for (let k = 0; k < this.enemyPool.length; k++) {
+                if (this.enemyPool[k] != undefined)
+                    this.enemyPool[k].update();
+            }
             this.input.inputLoop();
             this.tavoli.update();
             this.kozeli.update();
             this.hajo.update();
             for (let i = 0; i < this.hajo.tar.length; i++) {
                 for (let c = 0; c < this.enemyPool.length - 1; c++) {
-                    if (Util_6.Util.excuse4SAT(this.hajo.tar[i].sprite().position.x, this.hajo.tar[i].sprite().position.y, this.enemyPool[c].b.grafix().x, this.enemyPool[c].b.grafix().y) == true) {
+                    if (this.hajo.tar[i] != undefined && Util_5.Util.excuse4SAT(this.hajo.tar[i].sprite().position.x, this.hajo.tar[i].sprite().position.y, this.enemyPool[c].b.grafix().x, this.enemyPool[c].b.grafix().y, this.hajo.tar[i].b.s, this.enemyPool[c].b.s) == true) {
                         console.log(" rX ");
                         this.hajo.tar[i].vege();
                         this.enemyPool[c].vege();
                         this.enemyPool.splice(c, 1);
+                        this.hajo.tar.splice(i, 1);
                     }
                 }
             }
             for (let b = 0; b < this.enemyPool.length; b++) {
-                if (Util_6.Util.excuse4SAT(this.hajo.getB().grafix().x, this.hajo.getB().grafix().y, this.enemyPool[b].b.grafix().x, this.enemyPool[b].b.grafix().y) == true) {
+                if (Util_5.Util.excuse4SAT(this.hajo.getB().grafix().x, this.hajo.getB().grafix().y, this.enemyPool[b].b.grafix().x, this.enemyPool[b].b.grafix().y, this.hajo.getB().s, this.enemyPool[b].b.s) == true) {
                     this.hajo.sprite().visible = false;
-                    JelenetManager_3.JelenetManager.initJelenet("GO", GameOver_1.GameOver);
-                    JelenetManager_3.JelenetManager.startJelenet("GO");
+                    this.hajo.emitter();
                 }
+            }
+            if (this.hajo.end) {
+                ViewProvider_3.ViewProvider.initJelenet("GO", GameOver_1.GameOver);
+                ViewProvider_3.ViewProvider.startJelenet("GO");
             }
         }
         emitter() {
             this.enemyPool.push(new Enemy_1.Enemy(this));
-            for (let k = 0; k < this.enemyPool.length; k++)
-                this.enemyPool[k].update();
-        }
-        ffff() {
-            for (let i = 0; i < this.enemyPool.length - 1; i++) {
-                for (let j = 0; j < this.hajo.tar.length - 1; j++) {
-                    this.enemyPool[i].update();
-                    if (this.enemyPool[i] === undefined) {
-                        this.enemyPool[i] = new Enemy_1.Enemy(this);
-                    }
-                    else if (Util_6.Util.excuse4SAT(this.enemyPool[i].b.grafix().x, this.enemyPool[i].b.grafix().y, this.hajo.tar[j].sprite().position.x, this.hajo.tar[j].sprite().position.y)) {
-                        this.enemyPool[i].vege();
-                        this.hajo.tar[j].vege();
-                        this.hajo.tar.splice(j, 1);
-                        this.enemyPool[i].splice(i, 1);
-                        return this.emitter();
-                    }
-                }
-            }
+            setTimeout(() => this.emitter(), 2000);
         }
     }
     exports.DaGame = DaGame;
 });
-define("game/Splash", ["require", "exports", "game/Jelenet", "game/JelenetManager"], function (require, exports, Jelenet_4, JelenetManager_4) {
+define("game/Splash", ["require", "exports", "game/View", "game/ViewProvider"], function (require, exports, View_4, ViewProvider_4) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Splash extends Jelenet_4.Jelenet {
+    class Splash extends View_4.View {
         constructor() {
             super();
-            this.logo = PIXI.Sprite.fromImage("kp/bcube.png");
+            this.logo = PIXI.Sprite.fromImage("kp/mini_logo.png");
             this.addChild(this.logo);
             this.logo.anchor.x = 0.5;
             this.logo.anchor.y = 0.5;
@@ -654,7 +598,7 @@ define("game/Splash", ["require", "exports", "game/Jelenet", "game/JelenetManage
             if (this.logo.alpha < 1)
                 this.logo.alpha += 0.01;
             else
-                JelenetManager_4.JelenetManager.startJelenet('menu');
+                ViewProvider_4.ViewProvider.startJelenet('menu');
         }
     }
     exports.Splash = Splash;
@@ -668,19 +612,19 @@ define("eszk/MahButton", ["require", "exports"], function (require, exports) {
             this.onCreate(x, y, width, height);
         }
         onCreate(x, y, width, height) {
-            let gfx = new PIXI.Graphics();
-            gfx.beginFill(0xffffff, 1);
-            gfx.drawRoundedRect(0, 0, width, height, height / 5);
-            gfx.endFill();
-            this.texture = gfx.generateCanvasTexture();
+            let g = new PIXI.Graphics();
+            g.beginFill(0x738073, 1);
+            g.drawRoundedRect(0, 0, width, height, height / 5);
+            g.endFill();
+            this.texture = g.generateCanvasTexture();
             this.x = x;
             this.y = y;
             this.anchor.x = 0.5;
             this.anchor.y = 0.5;
-            this._text = new PIXI.Text("");
-            this._text.anchor.x = 0.5;
-            this._text.anchor.y = 0.5;
-            this.addChild(this._text);
+            this.pTxt = new PIXI.Text("");
+            this.pTxt.anchor.x = 0.5;
+            this.pTxt.anchor.y = 0.5;
+            this.addChild(this.pTxt);
             this.interactive = true;
             this.on("mousedown", () => {
                 this.onDown();
@@ -689,87 +633,112 @@ define("eszk/MahButton", ["require", "exports"], function (require, exports) {
                 this.onUp();
             }, this);
             this.on("mouseover", () => {
-                this.onHover();
+                this.onTouch();
             }, this);
             this.on("mouseout", () => {
                 this.onOut();
             }, this);
         }
         setText(val, style) {
-            this._text.text = val;
-            this._text.style = style;
+            this.pTxt.text = val;
+            this.pTxt.style = style;
         }
         onDown() {
-            console.log('Clicked');
             this.y += 5;
-            this.tint = 0xffffff;
+            this.tint = 0xC60000;
         }
         onUp() {
-            console.log('onup');
-            if (typeof (this._cb) === 'function') {
-                this._cb();
+            if (typeof (this.callback) === 'function') {
+                this.callback();
             }
             this.y -= 5;
-            this.tint = 0xF8A9F9;
+            this.tint = 0xF8F8F8;
         }
-        onHover() {
-            console.log('On Hover');
-            this.tint = 0xF8A9F9;
+        onTouch() {
+            this.tint = 0xFF0000;
             this.scale.x = 1.2;
             this.scale.y = 1.2;
         }
         onOut() {
-            console.log('On Out');
-            this.tint = 0xffffff;
+            this.tint = 0xF8F8F8;
             this.scale.x = 1;
             this.scale.y = 1;
         }
         get clicked() {
-            return this._cb;
+            return this.callback;
         }
         set clicked(cb) {
-            this._cb = cb;
+            this.callback = cb;
         }
     }
     exports.MahButton = MahButton;
 });
-define("game/Menu", ["require", "exports", "game/Jelenet", "eszk/MahButton", "game/JelenetManager", "game/DaGame"], function (require, exports, Jelenet_5, MahButton_1, JelenetManager_5, DaGame_1) {
+define("game/Menu", ["require", "exports", "game/View", "eszk/MahButton", "game/ViewProvider", "game/DaGame"], function (require, exports, View_5, MahButton_1, ViewProvider_5, DaGame_1) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    class Menu extends Jelenet_5.Jelenet {
+    class Menu extends View_5.View {
         constructor() {
             super();
-            this.gomb = new MahButton_1.MahButton(400, 300, 100, 50);
+            this.bground = PIXI.Texture.fromImage("kp/hatter.jpg");
+            let bg = new PIXI.Sprite(this.bground);
+            this.addChild(bg);
+            this.logo = PIXI.Sprite.fromImage("kp/planet.png");
+            this.logo.position.x = 400;
+            this.logo.position.y = 200;
+            this.logo.anchor.x = 0.5;
+            this.logo.anchor.y = 0.5;
+            this.ruler = PIXI.Sprite.fromImage("kp/ruler.png");
+            this.ruler.position.x = 400;
+            this.ruler.position.y = 200;
+            this.ruler.anchor.x = 0.1;
+            this.addChild(this.ruler);
+            this.addChild(this.logo);
+            this.b1 = new MahButton_1.MahButton(400, 300, 100, 50);
+            this.b2 = new MahButton_1.MahButton(400, 370, 100, 50);
+            this.b3 = new MahButton_1.MahButton(400, 440, 100, 50);
+            this.exit = new MahButton_1.MahButton(400, 510, 100, 50);
             this.innit();
         }
         innit() {
-            this.gomb.setText("Play!");
-            this.addChild(this.gomb);
-            this.gomb.clicked = () => {
+            this.b1.setText("Game1");
+            this.b2.setText("Game2");
+            this.b3.setText("Game3");
+            this.exit.setText("Exit");
+            this.addChild(this.b1);
+            this.addChild(this.b2);
+            this.addChild(this.b3);
+            this.addChild(this.exit);
+            this.b1.clicked = () => {
                 if (this.getIsPaused())
                     return;
-                console.log('I am clicked');
-                JelenetManager_5.JelenetManager.initJelenet("játék", DaGame_1.DaGame);
-                JelenetManager_5.JelenetManager.startJelenet('játék');
+                ViewProvider_5.ViewProvider.initJelenet("játék", DaGame_1.DaGame);
+                ViewProvider_5.ViewProvider.startJelenet('játék');
+            };
+            this.exit.clicked = () => {
+                if (this.getIsPaused())
+                    return;
+                window.location.assign("http://www.playngo.com");
             };
         }
         update() {
             super.update();
+            this.logo.rotation += 0.01;
+            this.ruler.rotation -= 0.01;
         }
     }
     exports.Menu = Menu;
 });
-define("App", ["require", "exports", "game/JelenetManager", "game/DaGame", "game/Splash", "game/Menu", "game/GameOver"], function (require, exports, JelenetManager_6, DaGame_2, Splash_1, Menu_1, GameOver_2) {
+define("App", ["require", "exports", "game/ViewProvider", "game/DaGame", "game/Splash", "game/Menu", "game/GameOver"], function (require, exports, ViewProvider_6, DaGame_2, Splash_1, Menu_1, GameOver_2) {
     "use strict";
     class App {
         constructor() {
             console.log('Hello World');
-            JelenetManager_6.JelenetManager.onCreate(800, 600);
-            JelenetManager_6.JelenetManager.initJelenet("splash", Splash_1.Splash);
-            JelenetManager_6.JelenetManager.initJelenet("menu", Menu_1.Menu);
-            JelenetManager_6.JelenetManager.initJelenet("játék", DaGame_2.DaGame);
-            JelenetManager_6.JelenetManager.initJelenet("GO", GameOver_2.GameOver);
-            JelenetManager_6.JelenetManager.startJelenet("splash");
+            ViewProvider_6.ViewProvider.onCreate(800, 600);
+            ViewProvider_6.ViewProvider.initJelenet("splash", Splash_1.Splash);
+            ViewProvider_6.ViewProvider.initJelenet("menu", Menu_1.Menu);
+            ViewProvider_6.ViewProvider.initJelenet("játék", DaGame_2.DaGame);
+            ViewProvider_6.ViewProvider.initJelenet("GO", GameOver_2.GameOver);
+            ViewProvider_6.ViewProvider.startJelenet("splash");
         }
     }
     return App;
