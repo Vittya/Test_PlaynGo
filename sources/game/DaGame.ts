@@ -117,8 +117,8 @@ export class DaGame extends View {
 
 
         if(this.hajo.end) {
-            ViewProvider.initJelenet("GO", GameOver);
-            ViewProvider.startJelenet("GO");
+            ViewProvider.initView("GO", GameOver);
+            ViewProvider.startView("GO");
         }
     }
 

@@ -2,12 +2,8 @@
 
 export abstract class SpaceCraft{
 
-    private texture:PIXI.Texture;
-    private _sprite:PIXI.Sprite;
-
-
-
-
+    private readonly texture:PIXI.Texture;
+    private readonly _sprite:PIXI.Sprite;
 
     constructor(t:PIXI.Texture){
         this.texture=t;

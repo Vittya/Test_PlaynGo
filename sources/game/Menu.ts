@@ -64,8 +64,8 @@ export class Menu extends View {
 
         this.b1.clicked = () => {
             if(this.getIsPaused())return;
-            ViewProvider.initJelenet("játék",DaGame);
-            ViewProvider.startJelenet('játék');
+            ViewProvider.initView("játék",DaGame);
+            ViewProvider.startView('játék');
         };
 
         this.exit.clicked = () => {

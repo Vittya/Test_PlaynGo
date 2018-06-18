@@ -2,7 +2,7 @@ import {Vektor} from "../eszk/Vektor";
 
 export class Bounding extends PIXI.Graphics{
 
-    private graphix:PIXI.Graphics;
+    private readonly graphix:PIXI.Graphics;
     private alfa:number=100;
     public circle:Vektor;
     public s:number;

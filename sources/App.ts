@@ -17,11 +17,11 @@ class App {
 
         ViewProvider.onCreate(800,600);
 
-        ViewProvider.initJelenet("splash",Splash);
-        ViewProvider.initJelenet("menu",Menu);
-        ViewProvider.initJelenet("játék",DaGame);
-        ViewProvider.initJelenet("GO",GameOver);
-        ViewProvider.startJelenet("splash");
+        ViewProvider.initView("splash",Splash);
+        ViewProvider.initView("menu",Menu);
+        ViewProvider.initView("játék",DaGame);
+        ViewProvider.initView("GO",GameOver);
+        ViewProvider.startView("splash");
 
         /*const renderer = PIXI.autoDetectRenderer(800, 600, {backgroundColor: 0x000000});
         document.body.appendChild(renderer.view);

@@ -22,46 +22,6 @@ export class Util {
         return tmb;
     }
 
-    static intersector(rectA: any, rectB: any): boolean {
-
-
-        let combinedHalfWidths, combinedHalfHeights, vx, vy;
-
-        var intersects: boolean = false;
-
-        rectA.centerX = rectA.x + rectA.width / 2;
-        rectA.centerY = rectA.y + rectA.height / 2;
-        rectB.centerX = rectB.x + rectB.width / 2;
-        rectB.centerY = rectB.y + rectB.height / 2;
-
-        rectA.halfWidth = rectA.width / 2;
-        rectA.halfHeight = rectA.height / 2;
-        rectB.halfWidth = rectB.width / 2;
-        rectB.halfHeight = rectB.height / 2;
-
-        vx = rectA.centerX - rectB.centerX;
-        vy = rectA.centerY - rectB.centerY;
-
-        combinedHalfWidths = rectA.halfWidth + rectB.halfWidth;
-        combinedHalfHeights = rectA.halfHeight + rectB.halfHeight;
-
-        if (Math.abs(vx) < combinedHalfWidths) {
-
-            if (Math.abs(vy) < combinedHalfHeights) {
-
-                intersects = true;
-            } else {
-
-                intersects = false;
-            }
-        } else {
-
-            intersects = false;
-        }
-
-
-        return intersects;
-    }
 
     static collision(a: PIXI.Sprite, b: PIXI.Sprite): boolean {
 

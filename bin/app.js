@@ -5,11 +5,10 @@ define("game/View", ["require", "exports"], function (require, exports) {
         constructor() {
             super();
             this.isPaused = false;
-            this.updateThisShit = function () { };
-            console.log('shit son');
+            this.updateThis = function () { };
         }
         update() {
-            this.updateThisShit();
+            this.updateThis();
         }
         onPause() {
             this.isPaused = true;
@@ -42,12 +41,12 @@ define("game/ViewProvider", ["require", "exports", "game/View"], function (requi
             ViewProvider.mostJelenet.update();
             ViewProvider.renderer.render(ViewProvider.mostJelenet);
         }
-        static initJelenet(id, J = View_1.View) {
+        static initView(id, J = View_1.View) {
             let j = new J();
             ViewProvider.jelentTMB[id] = j;
             return j;
         }
-        static startJelenet(id) {
+        static startView(id) {
             if (ViewProvider.jelentTMB[id]) {
                 ViewProvider.mostJelenet = ViewProvider.jelentTMB[id];
                 if (ViewProvider.jelentTMB[id])
@@ -95,34 +94,6 @@ define("eszk/Util", ["require", "exports"], function (require, exports) {
             let szg = Math.atan2(y, x);
             tmb = [o, szg];
             return tmb;
-        }
-        static intersector(rectA, rectB) {
-            let combinedHalfWidths, combinedHalfHeights, vx, vy;
-            var intersects = false;
-            rectA.centerX = rectA.x + rectA.width / 2;
-            rectA.centerY = rectA.y + rectA.height / 2;
-            rectB.centerX = rectB.x + rectB.width / 2;
-            rectB.centerY = rectB.y + rectB.height / 2;
-            rectA.halfWidth = rectA.width / 2;
-            rectA.halfHeight = rectA.height / 2;
-            rectB.halfWidth = rectB.width / 2;
-            rectB.halfHeight = rectB.height / 2;
-            vx = rectA.centerX - rectB.centerX;
-            vy = rectA.centerY - rectB.centerY;
-            combinedHalfWidths = rectA.halfWidth + rectB.halfWidth;
-            combinedHalfHeights = rectA.halfHeight + rectB.halfHeight;
-            if (Math.abs(vx) < combinedHalfWidths) {
-                if (Math.abs(vy) < combinedHalfHeights) {
-                    intersects = true;
-                }
-                else {
-                    intersects = false;
-                }
-            }
-            else {
-                intersects = false;
-            }
-            return intersects;
         }
         static collision(a, b) {
             a.calculateBounds();
@@ -433,10 +404,10 @@ define("eszk/EZkey", ["require", "exports"], function (require, exports) {
                 this.keyDown[event.keyCode] = false;
             };
             this.inputLoop = () => {
-                for (var key in this.keyDown) {
-                    var is_down = this.keyDown[key];
+                for (let key in this.keyDown) {
+                    let is_down = this.keyDown[key];
                     if (is_down) {
-                        var callback = this.EZcallback[key];
+                        let callback = this.EZcallback[key];
                         if (callback != null) {
                             callback();
                         }
@@ -485,7 +456,7 @@ define("game_entities/enemy/Enemy", ["require", "exports", "game_entities/SpaceC
                 this.ar.push(new Explosion_2.Explosion(Util_4.Util.polarbolCart(s, q)[0] + this.sprite().position.x, Util_4.Util.polarbolCart(s, q)[1] + this.sprite().position.y, this.s));
             }
             this.m += 10;
-            var ii = setTimeout(() => this.vege(), 20);
+            let ii = setTimeout(() => this.vege(), 20);
             if (this.m > 100) {
                 this.s.removeChild(this.sprite());
                 for (let i = 0; i < this.ar.length; i++)
@@ -513,7 +484,7 @@ define("game/GameOver", ["require", "exports", "game/ViewProvider", "game/View"]
             if (this.logo.alpha < 1)
                 this.logo.alpha += 0.005;
             else
-                ViewProvider_2.ViewProvider.startJelenet('menu');
+                ViewProvider_2.ViewProvider.startView('menu');
         }
     }
     exports.GameOver = GameOver;
@@ -568,8 +539,8 @@ define("game/DaGame", ["require", "exports", "game/View", "game_entities/Ship", 
                 }
             }
             if (this.hajo.end) {
-                ViewProvider_3.ViewProvider.initJelenet("GO", GameOver_1.GameOver);
-                ViewProvider_3.ViewProvider.startJelenet("GO");
+                ViewProvider_3.ViewProvider.initView("GO", GameOver_1.GameOver);
+                ViewProvider_3.ViewProvider.startView("GO");
             }
         }
         emitter() {
@@ -598,7 +569,7 @@ define("game/Splash", ["require", "exports", "game/View", "game/ViewProvider"], 
             if (this.logo.alpha < 1)
                 this.logo.alpha += 0.01;
             else
-                ViewProvider_4.ViewProvider.startJelenet('menu');
+                ViewProvider_4.ViewProvider.startView('menu');
         }
     }
     exports.Splash = Splash;
@@ -711,8 +682,8 @@ define("game/Menu", ["require", "exports", "game/View", "eszk/MahButton", "game/
             this.b1.clicked = () => {
                 if (this.getIsPaused())
                     return;
-                ViewProvider_5.ViewProvider.initJelenet("játék", DaGame_1.DaGame);
-                ViewProvider_5.ViewProvider.startJelenet('játék');
+                ViewProvider_5.ViewProvider.initView("játék", DaGame_1.DaGame);
+                ViewProvider_5.ViewProvider.startView('játék');
             };
             this.exit.clicked = () => {
                 if (this.getIsPaused())
@@ -734,11 +705,11 @@ define("App", ["require", "exports", "game/ViewProvider", "game/DaGame", "game/S
         constructor() {
             console.log('Hello World');
             ViewProvider_6.ViewProvider.onCreate(800, 600);
-            ViewProvider_6.ViewProvider.initJelenet("splash", Splash_1.Splash);
-            ViewProvider_6.ViewProvider.initJelenet("menu", Menu_1.Menu);
-            ViewProvider_6.ViewProvider.initJelenet("játék", DaGame_2.DaGame);
-            ViewProvider_6.ViewProvider.initJelenet("GO", GameOver_2.GameOver);
-            ViewProvider_6.ViewProvider.startJelenet("splash");
+            ViewProvider_6.ViewProvider.initView("splash", Splash_1.Splash);
+            ViewProvider_6.ViewProvider.initView("menu", Menu_1.Menu);
+            ViewProvider_6.ViewProvider.initView("játék", DaGame_2.DaGame);
+            ViewProvider_6.ViewProvider.initView("GO", GameOver_2.GameOver);
+            ViewProvider_6.ViewProvider.startView("splash");
         }
     }
     return App;

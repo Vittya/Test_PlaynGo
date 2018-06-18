@@ -1,15 +1,14 @@
 export class View extends PIXI.Container{
 	private isPaused:boolean = false;
-	private updateThisShit = function(){};
+	private updateThis = function(){};
 
 	constructor() {
 		super();
-		console.log('shit son');
 
 	}
 
 	public update():void{
-		this.updateThisShit();
+		this.updateThis();
 	}
 
 	public onPause():void{

@@ -17,7 +17,7 @@ export class GameOver extends View{
     public update():void {
         super.update();
         if (this.logo.alpha < 1) this.logo.alpha += 0.005;
-        else ViewProvider.startJelenet('menu');
+        else ViewProvider.startView('menu');
     }
 
 }

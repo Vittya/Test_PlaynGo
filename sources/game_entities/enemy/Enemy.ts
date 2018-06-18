@@ -5,8 +5,8 @@ import {Explosion} from "../../large_hadron_collider/Explosion";
 
 export class Enemy extends SpaceCraft {
 
-    private s:PIXI.Container;
-    private ps:PIXI.particles.ParticleContainer;
+    private readonly s:PIXI.Container;
+    private readonly ps:PIXI.particles.ParticleContainer;
     private ar:any = [];
 
     private preY:number;
@@ -65,7 +65,7 @@ export class Enemy extends SpaceCraft {
 
         this.m+=10;
 
-        var ii=setTimeout(() => this.vege(), 20);
+        let ii=setTimeout(() => this.vege(), 20);
         if(this.m>100){
 
             this.s.removeChild(this.sprite());

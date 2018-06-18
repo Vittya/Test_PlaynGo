@@ -27,15 +27,8 @@ export class HiggsBozon extends PIXI.Graphics{
         this.graphix.position.x+=Util.polarbolCart(1,Util.vltln(-22.5,22.5))[0];
         this.graphix.position.y+=Util.polarbolCart(1,Util.vltln(-22.5, 22.5))[1];
 
-
-
-
         this.alfa-=10;
         this.graphix.alpha=this.alfa;
-
-
-
-
 
     }
 
