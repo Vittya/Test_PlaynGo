@@ -8,7 +8,7 @@ export class MahButton extends PIXI.Sprite {
             super();
             this.onCreate(x, y, width, height);
         }
-        //
+
 
         onCreate(x: number, y: number, width: number, height: number) {
             let g = new PIXI.Graphics();

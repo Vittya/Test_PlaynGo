@@ -8,8 +8,6 @@ export class HiggsBozon extends PIXI.Graphics{
     private alfa:number=100;
     private graphix:PIXI.Graphics;
 
-
-
     constructor(x:number,y:number,){
         super();
         this.x=x;
@@ -24,9 +22,8 @@ export class HiggsBozon extends PIXI.Graphics{
     }
 
     public update():void{
-        this.graphix.position.x+=Util.polarbolCart(1,Util.vltln(-22.5,22.5))[0];
-        this.graphix.position.y+=Util.polarbolCart(1,Util.vltln(-22.5, 22.5))[1];
-
+        this.graphix.position.x+=Util.polarToCartesian(1,Util.randomize(-22.5,22.5))[0];
+        this.graphix.position.y+=Util.polarToCartesian(1,Util.randomize(-22.5, 22.5))[1];
         this.alfa-=10;
         this.graphix.alpha=this.alfa;
 
@@ -37,7 +34,7 @@ export class HiggsBozon extends PIXI.Graphics{
         return this.graphix;
     }
 
-    public vege():boolean{
+    public end():boolean{
         if(this.alfa<0)
         return true;
         else return false;

@@ -3,7 +3,7 @@ import {ViewProvider} from "./ViewProvider";
 
 export class Splash extends View{
 
-    private logo:PIXI.Sprite;
+    private readonly logo:PIXI.Sprite;
     constructor(){
         super();
         this.logo=PIXI.Sprite.fromImage("kp/mini_logo.png");

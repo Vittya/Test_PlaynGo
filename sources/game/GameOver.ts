@@ -3,12 +3,11 @@ import {View} from "./View";
 
 export class GameOver extends View{
 
-    private logo:PIXI.Sprite;
+    private readonly logo:PIXI.Sprite;
     constructor(){
         super();
         this.logo=PIXI.Sprite.fromImage("kp/endscreen.jpg");
         this.addChild(this.logo);
-
         this.logo.alpha=0;
         this.logo.position.x=0;
         this.logo.position.y=75;

@@ -7,8 +7,6 @@ export class Bounding extends PIXI.Graphics{
     public circle:Vektor;
     public s:number;
 
-
-
     constructor(x:number,y:number,s:number){
         super();
 

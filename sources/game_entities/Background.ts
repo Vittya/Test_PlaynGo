@@ -1,6 +1,7 @@
 export abstract class Background{
     private texture:PIXI.Texture;
     private readonly tSprite:PIXI.extras.TilingSprite;
+
     constructor(t:PIXI.Texture,sz:number,h:number){
 
         this.texture=t;

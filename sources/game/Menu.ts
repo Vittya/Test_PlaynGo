@@ -82,9 +82,6 @@ export class Menu extends View {
         this.logo.rotation+=0.01;
         this.ruler.rotation-=0.01;
 
-
-
-
     }
 
 

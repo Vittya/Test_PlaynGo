@@ -4,14 +4,13 @@ import {View} from "./View";
 
 export class ViewProvider {
 
-    private static jelentTMB:any={};
-    public static mostJelenet:View;
+    private static viewArray:any={};
+    public static viewNow:View;
     public static renderer: any;
     x: number;
     y: number;
 
     public static onCreate(sz:number,h:number):any{
-
 
         if (ViewProvider.renderer!=null) return this;
         ViewProvider.renderer = PIXI.autoDetectRenderer(sz,h);
@@ -23,25 +22,24 @@ export class ViewProvider {
     private static update(){
         requestAnimationFrame(function(){ViewProvider.update()});
 
-        if(!ViewProvider.mostJelenet||ViewProvider.mostJelenet.getIsPaused()) return;
-        ViewProvider.mostJelenet.update();
-        ViewProvider.renderer.render(ViewProvider.mostJelenet);
+        if(!ViewProvider.viewNow||ViewProvider.viewNow.getIsPaused()) return;
+        ViewProvider.viewNow.update();
+        ViewProvider.renderer.render(ViewProvider.viewNow);
     }
     public static initView(id: string, J: new () => View = View): View {
 
-
         let j = new J();
-        ViewProvider.jelentTMB[id] = j;
+        ViewProvider.viewArray[id] = j;
         return j;
     }
 
     public static startView(id: string):boolean{
 
-        if (ViewProvider.jelentTMB[id]) {
-            ViewProvider.mostJelenet = ViewProvider.jelentTMB[id];
-            if (ViewProvider.jelentTMB[id]) ViewProvider.mostJelenet.onPause();
+        if (ViewProvider.viewArray[id]) {
+            ViewProvider.viewNow = ViewProvider.viewArray[id];
+            if (ViewProvider.viewArray[id]) ViewProvider.viewNow.onPause();
 
-            ViewProvider.mostJelenet.onResume();
+            ViewProvider.viewNow.onResume();
             return true;
         }
         return false;

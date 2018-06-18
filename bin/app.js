@@ -36,28 +36,28 @@ define("game/ViewProvider", ["require", "exports", "game/View"], function (requi
         }
         static update() {
             requestAnimationFrame(function () { ViewProvider.update(); });
-            if (!ViewProvider.mostJelenet || ViewProvider.mostJelenet.getIsPaused())
+            if (!ViewProvider.viewNow || ViewProvider.viewNow.getIsPaused())
                 return;
-            ViewProvider.mostJelenet.update();
-            ViewProvider.renderer.render(ViewProvider.mostJelenet);
+            ViewProvider.viewNow.update();
+            ViewProvider.renderer.render(ViewProvider.viewNow);
         }
         static initView(id, J = View_1.View) {
             let j = new J();
-            ViewProvider.jelentTMB[id] = j;
+            ViewProvider.viewArray[id] = j;
             return j;
         }
         static startView(id) {
-            if (ViewProvider.jelentTMB[id]) {
-                ViewProvider.mostJelenet = ViewProvider.jelentTMB[id];
-                if (ViewProvider.jelentTMB[id])
-                    ViewProvider.mostJelenet.onPause();
-                ViewProvider.mostJelenet.onResume();
+            if (ViewProvider.viewArray[id]) {
+                ViewProvider.viewNow = ViewProvider.viewArray[id];
+                if (ViewProvider.viewArray[id])
+                    ViewProvider.viewNow.onPause();
+                ViewProvider.viewNow.onResume();
                 return true;
             }
             return false;
         }
     }
-    ViewProvider.jelentTMB = {};
+    ViewProvider.viewArray = {};
     exports.ViewProvider = ViewProvider;
 });
 define("game_entities/SpaceCraft", ["require", "exports"], function (require, exports) {
@@ -78,17 +78,17 @@ define("eszk/Util", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     class Util {
-        static vltln(lega, legf) {
+        static randomize(lega, legf) {
             return Math.floor(Math.random() * (lega - legf + 1) + lega);
         }
-        static polarbolCart(o, szg) {
+        static polarToCartesian(o, szg) {
             let tmb = [];
             let x = o * Math.cos(szg);
             let y = o * Math.sin(szg);
             tmb = [x, y];
             return tmb;
         }
-        static cartbolPolar(x, y) {
+        static cartesianToPolar(x, y) {
             let tmb = [];
             let o = Math.sqrt((Math.pow(x, 2) * Math.pow(y, 2)));
             let szg = Math.atan2(y, x);
@@ -175,17 +175,17 @@ define("game_entities/Rocket", ["require", "exports", "game_entities/SpaceCraft"
             this.ss.addChild(this.sprite());
         }
         update() {
-            this.sprite().position.x += Util_1.Util.polarbolCart(10, this.angle)[0];
-            this.sprite().position.y += Util_1.Util.polarbolCart(10, this.angle)[1];
-            if (Math.abs(Util_1.Util.cartbolPolar(this.sprite().position.x, this.sprite().position.y)[0] -
-                Util_1.Util.cartbolPolar(this.x, this.y)[0]) > 300000) {
-                this.vege();
+            this.sprite().position.x += Util_1.Util.polarToCartesian(10, this.angle)[0];
+            this.sprite().position.y += Util_1.Util.polarToCartesian(10, this.angle)[1];
+            if (Math.abs(Util_1.Util.cartesianToPolar(this.sprite().position.x, this.sprite().position.y)[0] -
+                Util_1.Util.cartesianToPolar(this.x, this.y)[0]) > 300000) {
+                this.end();
                 this.isOutside = true;
             }
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
         }
-        vege() {
+        end() {
             this.ss.removeChild(this.sprite());
         }
     }
@@ -208,15 +208,15 @@ define("large_hadron_collider/HiggsBozon", ["require", "exports", "eszk/Util"], 
             this.graphix.endFill();
         }
         update() {
-            this.graphix.position.x += Util_2.Util.polarbolCart(1, Util_2.Util.vltln(-22.5, 22.5))[0];
-            this.graphix.position.y += Util_2.Util.polarbolCart(1, Util_2.Util.vltln(-22.5, 22.5))[1];
+            this.graphix.position.x += Util_2.Util.polarToCartesian(1, Util_2.Util.randomize(-22.5, 22.5))[0];
+            this.graphix.position.y += Util_2.Util.polarToCartesian(1, Util_2.Util.randomize(-22.5, 22.5))[1];
             this.alfa -= 10;
             this.graphix.alpha = this.alfa;
         }
         grafix() {
             return this.graphix;
         }
-        vege() {
+        end() {
             if (this.alfa < 0)
                 return true;
             else
@@ -250,7 +250,7 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
     class Ship extends SpaceCraft_3.SpaceCraft {
         constructor(s) {
             super(PIXI.Texture.fromImage("kp/ufo.png"));
-            this.tar = [];
+            this.mag = [];
             this.end = false;
             this.bozon = new Array(30);
             this.m = 10;
@@ -258,19 +258,19 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
             this.n = 2;
             this.b = new Bounding_2.Bounding(this.sprite().x, this.sprite().y, 20);
             this.ss = s;
-            this.horgX = 0.5;
-            this.horgY = 0.5;
-            this.sprite().anchor.x = this.horgX;
-            this.sprite().anchor.y = this.horgY;
+            this.anchX = 0.5;
+            this.anchY = 0.5;
+            this.sprite().anchor.x = this.anchX;
+            this.sprite().anchor.y = this.anchY;
             this.sprite().position.x = 100;
             this.sprite().position.y = 300;
-            this.agyu = new PIXI.particles.ParticleContainer();
+            this.gun = new PIXI.particles.ParticleContainer();
             const someFunc = () => {
-                this.rocket = new Rocket_1.Rocket(this.sprite().position.x, this.sprite().position.y, this.agyu);
+                this.rocket = new Rocket_1.Rocket(this.sprite().position.x, this.sprite().position.y, this.gun);
                 Ship.aim = this.turnInPosition(this.sprite().position.x, this.sprite().position.y);
-                this.tar.push(this.rocket);
+                this.mag.push(this.rocket);
             };
-            s.addChild(this.agyu);
+            s.addChild(this.gun);
             s.addChild(this.b.grafix());
             s.addChild(this.sprite());
             this.ss.on("mousedown", someFunc, this.ss);
@@ -283,7 +283,7 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
             for (let i = 0; i < 30; i++) {
                 if (this.bozon[i]) {
                     this.bozon[i].update();
-                    if (this.bozon[i].vege()) {
+                    if (this.bozon[i].end()) {
                         this.ss.removeChild(this.bozon[i].grafix());
                         this.bozon.splice(i, 1);
                     }
@@ -300,8 +300,8 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
             return this.b;
         }
         impulseEngine() {
-            this.sprite().position.x += Util_3.Util.polarbolCart(10, this.sprite().rotation)[0];
-            this.sprite().position.y += Util_3.Util.polarbolCart(10, this.sprite().rotation)[1];
+            this.sprite().position.x += Util_3.Util.polarToCartesian(10, this.sprite().rotation)[0];
+            this.sprite().position.y += Util_3.Util.polarToCartesian(10, this.sprite().rotation)[1];
             for (let i = 0; i < 30; i++) {
                 if (this.bozon[i] === undefined) {
                     this.bozon[i] = new HiggsBozon_1.HiggsBozon(this.sprite().position.x, this.sprite().position.y);
@@ -310,22 +310,22 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
             }
         }
         fire() {
-            for (var b = this.tar.length - 1; b >= 0; b--) {
-                if (this.tar[b] != undefined && this.tar[b].isOutside == false)
-                    this.tar[b].update();
+            for (var b = this.mag.length - 1; b >= 0; b--) {
+                if (this.mag[b] != undefined && this.mag[b].isOutside == false)
+                    this.mag[b].update();
             }
         }
         turnInPosition(x, y) {
             let tavY = ViewProvider_1.ViewProvider.renderer.plugins.interaction.mouse.global.y - y;
             let tavX = ViewProvider_1.ViewProvider.renderer.plugins.interaction.mouse.global.x - x;
-            let szg = Util_3.Util.cartbolPolar(tavX, tavY)[1];
+            let szg = Util_3.Util.cartesianToPolar(tavX, tavY)[1];
             return szg;
         }
         emitter() {
             for (let q = 0; q < Math.PI * this.d; q += 0.2) {
                 let k = this.n / this.d;
                 let s = Math.cos(k * q) * this.m;
-                new Explosion_1.Explosion(Util_3.Util.polarbolCart(s, q)[0] + this.sprite().position.x, Util_3.Util.polarbolCart(s, q)[1] + this.sprite().position.y, this.ss).update();
+                new Explosion_1.Explosion(Util_3.Util.polarToCartesian(s, q)[0] + this.sprite().position.x, Util_3.Util.polarToCartesian(s, q)[1] + this.sprite().position.y, this.ss).update();
             }
             this.m += 10;
             var ii = setTimeout(() => this.emitter(), 200);
@@ -445,18 +445,18 @@ define("game_entities/enemy/Enemy", ["require", "exports", "game_entities/SpaceC
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
             this.sprite().position.x--;
-            this.sprite().position.y += Math.sin(Util_4.Util.vltln(-10, 10)) * 5;
+            this.sprite().position.y += Math.sin(Util_4.Util.randomize(-10, 10)) * 5;
             this.b.grafix().position.x = this.sprite().position.x;
             this.b.grafix().position.y = this.sprite().position.y;
         }
-        vege() {
+        end() {
             for (let q = 0; q < Math.PI * this.d; q += 0.1) {
                 let k = this.n / this.d;
                 let s = Math.cos(k * q) * this.m;
-                this.ar.push(new Explosion_2.Explosion(Util_4.Util.polarbolCart(s, q)[0] + this.sprite().position.x, Util_4.Util.polarbolCart(s, q)[1] + this.sprite().position.y, this.s));
+                this.ar.push(new Explosion_2.Explosion(Util_4.Util.polarToCartesian(s, q)[0] + this.sprite().position.x, Util_4.Util.polarToCartesian(s, q)[1] + this.sprite().position.y, this.s));
             }
             this.m += 10;
-            let ii = setTimeout(() => this.vege(), 20);
+            let ii = setTimeout(() => this.end(), 20);
             if (this.m > 100) {
                 this.s.removeChild(this.sprite());
                 for (let i = 0; i < this.ar.length; i++)
@@ -499,15 +499,15 @@ define("game/DaGame", ["require", "exports", "game/View", "game_entities/Ship", 
             this.preDelta = 0;
             this.enemyPool = [];
             this.input = new EZkey_1.EZkey();
-            this.input.addKey(38, () => this.hajo.impulseEngine());
-            this.input.addKey(37, () => this.hajo.lateralThrust(-0.1));
-            this.input.addKey(39, () => this.hajo.lateralThrust(0.1));
+            this.input.addKey(38, () => this.ship.impulseEngine());
+            this.input.addKey(37, () => this.ship.lateralThrust(-0.1));
+            this.input.addKey(39, () => this.ship.lateralThrust(0.1));
             this.i = 0;
-            this.kozeli = new Close_1.Close(this);
-            this.tavoli = new Far_1.Far(this);
-            this.hajo = new Ship_2.Ship(this);
+            this.close1 = new Close_1.Close(this);
+            this.far = new Far_1.Far(this);
+            this.ship = new Ship_2.Ship(this);
             this.interactive = true;
-            setTimeout(() => this.emitter(), 2000);
+            this.iii = setTimeout(() => this.emitter(), 2000);
         }
         update() {
             super.update();
@@ -518,27 +518,27 @@ define("game/DaGame", ["require", "exports", "game/View", "game_entities/Ship", 
                     this.enemyPool[k].update();
             }
             this.input.inputLoop();
-            this.tavoli.update();
-            this.kozeli.update();
-            this.hajo.update();
-            for (let i = 0; i < this.hajo.tar.length; i++) {
+            this.far.update();
+            this.close1.update();
+            this.ship.update();
+            for (let i = 0; i < this.ship.mag.length; i++) {
                 for (let c = 0; c < this.enemyPool.length - 1; c++) {
-                    if (this.hajo.tar[i] != undefined && Util_5.Util.excuse4SAT(this.hajo.tar[i].sprite().position.x, this.hajo.tar[i].sprite().position.y, this.enemyPool[c].b.grafix().x, this.enemyPool[c].b.grafix().y, this.hajo.tar[i].b.s, this.enemyPool[c].b.s) == true) {
-                        console.log(" rX ");
-                        this.hajo.tar[i].vege();
-                        this.enemyPool[c].vege();
+                    if (this.ship.mag[i] != undefined && Util_5.Util.excuse4SAT(this.ship.mag[i].sprite().position.x, this.ship.mag[i].sprite().position.y, this.enemyPool[c].b.grafix().x, this.enemyPool[c].b.grafix().y, this.ship.mag[i].b.s, this.enemyPool[c].b.s) == true) {
+                        this.ship.mag[i].end();
+                        this.enemyPool[c].end();
                         this.enemyPool.splice(c, 1);
-                        this.hajo.tar.splice(i, 1);
+                        this.ship.mag.splice(i, 1);
                     }
                 }
             }
             for (let b = 0; b < this.enemyPool.length; b++) {
-                if (Util_5.Util.excuse4SAT(this.hajo.getB().grafix().x, this.hajo.getB().grafix().y, this.enemyPool[b].b.grafix().x, this.enemyPool[b].b.grafix().y, this.hajo.getB().s, this.enemyPool[b].b.s) == true) {
-                    this.hajo.sprite().visible = false;
-                    this.hajo.emitter();
+                if (Util_5.Util.excuse4SAT(this.ship.getB().grafix().x, this.ship.getB().grafix().y, this.enemyPool[b].b.grafix().x, this.enemyPool[b].b.grafix().y, this.ship.getB().s, this.enemyPool[b].b.s) == true) {
+                    this.ship.sprite().visible = false;
+                    this.ship.emitter();
                 }
             }
-            if (this.hajo.end) {
+            if (this.ship.end) {
+                clearTimeout(this.iii);
                 ViewProvider_3.ViewProvider.initView("GO", GameOver_1.GameOver);
                 ViewProvider_3.ViewProvider.startView("GO");
             }
@@ -703,7 +703,7 @@ define("App", ["require", "exports", "game/ViewProvider", "game/DaGame", "game/S
     "use strict";
     class App {
         constructor() {
-            console.log('Hello World');
+            console.log('Init');
             ViewProvider_6.ViewProvider.onCreate(800, 600);
             ViewProvider_6.ViewProvider.initView("splash", Splash_1.Splash);
             ViewProvider_6.ViewProvider.initView("menu", Menu_1.Menu);

@@ -22,7 +22,7 @@ var Enemy = /** @class */ (function (_super) {
         _this.direction = new Vektor_1.Vektor(1, 0);
         _this.filler = new Vektor_1.Vektor(0, 0);
         _this.sprite().position.x = 900;
-        _this.sprite().position.y = Util_1.Util.vltln(100, 500);
+        _this.sprite().position.y = Util_1.Util.randomize(100, 500);
         _this.sprite().anchor.x = 0.5;
         _this.sprite().anchor.y = 0.5;
         _this.preY = _this.sprite().position.y;
@@ -43,8 +43,8 @@ var Enemy = /** @class */ (function (_super) {
         }
         this.sprite().position.x += this.acceleration.x;
         this.sprite().position.y = this.acceleration.y;
-        if (Util_1.Util.cartbolPolar(this.preX, this.preY)[0] < 100)
-            this.vege();
+        if (Util_1.Util.cartesianToPolar(this.preX, this.preY)[0] < 100)
+            this.end();
     };
     Enemy.prototype.vege = function () {
         this.s.removeChild(this.sprite());

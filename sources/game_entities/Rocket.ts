@@ -29,13 +29,13 @@ export class Rocket extends SpaceCraft{
 
     update(): void {
 
-        this.sprite().position.x += Util.polarbolCart(10, this.angle)[0];
-        this.sprite().position.y += Util.polarbolCart(10, this.angle)[1];
+        this.sprite().position.x += Util.polarToCartesian(10, this.angle)[0];
+        this.sprite().position.y += Util.polarToCartesian(10, this.angle)[1];
 
-        if (Math.abs(Util.cartbolPolar(this.sprite().position.x, this.sprite().position.y)[0] -
-            Util.cartbolPolar(this.x, this.y)[0]) > 300000){
+        if (Math.abs(Util.cartesianToPolar(this.sprite().position.x, this.sprite().position.y)[0] -
+            Util.cartesianToPolar(this.x, this.y)[0]) > 300000){
 
-                this.vege();
+                this.end();
                 this.isOutside=true;
 
             }
@@ -45,7 +45,7 @@ export class Rocket extends SpaceCraft{
 
     }
 
-    public vege():void{
+    public end():void{
         this.ss.removeChild(this.sprite()) ;
     }
 }

@@ -11,8 +11,6 @@ export abstract class SpaceCraft{
 
     }
 
-
-
     public sprite(): PIXI.Sprite {
         return this._sprite;
     }

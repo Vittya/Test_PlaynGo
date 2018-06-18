@@ -8,63 +8,44 @@ import {Explosion} from "../large_hadron_collider/Explosion";
 
 export class Ship extends SpaceCraft{
 
-    private horgX:number;
-    private horgY:number;
-
-
+    private anchX:number;
+    private anchY:number;
     private rocket:Rocket;
-    public tar:Rocket[]=[];
-    public agyu:PIXI.particles.ParticleContainer;
+    public mag:Rocket[]=[];
+    public gun:PIXI.particles.ParticleContainer;
     public static aim:number;
     private ss:PIXI.Container;
-
     public end:boolean=false;
     private b:Bounding;
-
-
-
     private bozon:any = new Array(30);
-
     private m:number=10;
     private d:number=9;
     private n:number=2;
 
-
-
-
     constructor(s:PIXI.Container){
         super(PIXI.Texture.fromImage("kp/ufo.png"));
 
-
-
         this.b = new Bounding(this.sprite().x,this.sprite().y,20);
-
         this.ss=s;
-        this.horgX=0.5;
-        this.horgY=0.5;
-
-
-
-
-
-    this.sprite().anchor.x=this.horgX;
-    this.sprite().anchor.y=this.horgY;
-    this.sprite().position.x=100;
-    this.sprite().position.y=300;
-
-    this.agyu = new PIXI.particles.ParticleContainer();
+        this.anchX=0.5;
+        this.anchY=0.5;
+        this.sprite().anchor.x=this.anchX;
+        this.sprite().anchor.y=this.anchY;
+        this.sprite().position.x=100;
+        this.sprite().position.y=300;
+        this.gun = new PIXI.particles.ParticleContainer();
 
 
     const someFunc = () => {
 
-                this.rocket = new Rocket(this.sprite().position.x, this.sprite().position.y, this.agyu);
+                this.rocket = new Rocket(this.sprite().position.x, this.sprite().position.y, this.gun);
                 Ship.aim = this.turnInPosition(this.sprite().position.x, this.sprite().position.y);
-                this.tar.push(this.rocket);
+                this.mag.push(this.rocket);
 
     };
 
 
-    s.addChild(this.agyu);
+    s.addChild(this.gun);
     s.addChild(this.b.grafix());
     s.addChild(this.sprite());
         this.ss.on("mousedown", someFunc, this.ss);
@@ -85,7 +66,7 @@ export class Ship extends SpaceCraft{
             if(this.bozon[i]) {
                 this.bozon[i].update();
 
-                if (this.bozon[i].vege()) {
+                if (this.bozon[i].end()) {
                     this.ss.removeChild(this.bozon[i].grafix());
                     this.bozon.splice(i,1);
                 }
@@ -110,8 +91,8 @@ export class Ship extends SpaceCraft{
 
     public impulseEngine():void {
 
-           this.sprite().position.x+=Util.polarbolCart(10,this.sprite().rotation)[0];
-           this.sprite().position.y+=Util.polarbolCart(10,this.sprite().rotation)[1];
+           this.sprite().position.x+=Util.polarToCartesian(10,this.sprite().rotation)[0];
+           this.sprite().position.y+=Util.polarToCartesian(10,this.sprite().rotation)[1];
 
         for(let i=0;i<30;i++) {
             if (this.bozon[i] === undefined) {
@@ -128,10 +109,10 @@ export class Ship extends SpaceCraft{
 
     public fire():void{
 
-        for(var b=this.tar.length-1;b>=0;b--) {
+        for(var b=this.mag.length-1; b>=0; b--) {
 
-            if(this.tar[b]!=undefined&&this.tar[b].isOutside==false)
-            this.tar[b].update();
+            if(this.mag[b]!=undefined&&this.mag[b].isOutside==false)
+            this.mag[b].update();
 
         }
     }
@@ -141,7 +122,7 @@ export class Ship extends SpaceCraft{
 
         let tavY = ViewProvider.renderer.plugins.interaction.mouse.global.y - y;
         let tavX = ViewProvider.renderer.plugins.interaction.mouse.global.x - x;
-        let szg = Util.cartbolPolar(tavX,tavY)[1];
+        let szg = Util.cartesianToPolar(tavX,tavY)[1];
         return szg;
     }
 
@@ -152,8 +133,8 @@ export class Ship extends SpaceCraft{
             let k = this.n / this.d;
 
             let s = Math.cos(k * q) * this.m;
-            new Explosion(Util.polarbolCart(s, q)[0] + this.sprite().position.x,
-                Util.polarbolCart(s, q)[1] + this.sprite().position.y, this.ss).update();
+            new Explosion(Util.polarToCartesian(s, q)[0] + this.sprite().position.x,
+                Util.polarToCartesian(s, q)[1] + this.sprite().position.y, this.ss).update();
 
         }
 
@@ -165,7 +146,6 @@ export class Ship extends SpaceCraft{
             this.end=true;
             clearTimeout(ii);
         }
-
 
     }
 

@@ -2,11 +2,11 @@
 
 export class Util {
 
-    static vltln(lega: number, legf: number): number {
+    static randomize(lega: number, legf: number): number {
         return Math.floor(Math.random() * (lega - legf + 1) + lega);
     }
 
-    static polarbolCart(o: number, szg: number): number[] {
+    static polarToCartesian(o: number, szg: number): number[] {
         let tmb: number[] = [];
         let x = o * Math.cos(szg);
         let y = o * Math.sin(szg);
@@ -14,7 +14,7 @@ export class Util {
         return tmb;
     }
 
-    static cartbolPolar(x: number, y: number): number[] {
+    static cartesianToPolar(x: number, y: number): number[] {
         let tmb: number[] = [];
         let o = Math.sqrt((Math.pow(x, 2) * Math.pow(y, 2)));
         let szg = Math.atan2(y, x);

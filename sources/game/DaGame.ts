@@ -2,22 +2,17 @@ import {View} from "./View";
 import {Ship} from "../game_entities/Ship";
 import {Far} from "../game_entities/Far";
 import {Close} from "../game_entities/Close";
-import {HiggsBozon} from "../large_hadron_collider/HiggsBozon";
-import {Impulse} from "../large_hadron_collider/Impulse";
 import {Util} from "../eszk/Util";
 import {EZkey} from "../eszk/EZkey";
 import {Enemy} from "../game_entities/enemy/Enemy";
-import {Vektor} from "../eszk/Vektor";
-import {Rocket} from "../game_entities/Rocket";
 import {ViewProvider} from "./ViewProvider";
 import {GameOver} from "./GameOver";
-import {Explosion} from "../large_hadron_collider/Explosion";
 
 export class DaGame extends View {
 
-    private hajo: Ship;
-    private tavoli: Far;
-    private kozeli: Close;
+    private ship: Ship;
+    private far: Far;
+    private close1: Close;
     private i: number;
 
 
@@ -25,8 +20,7 @@ export class DaGame extends View {
     private preDelta: number = 0;
 
     private input: EZkey;
-
-
+    private iii:any;
     private enemyPool: any = [];
 
 
@@ -34,22 +28,19 @@ export class DaGame extends View {
         super();
 
         this.input = new EZkey();
-        this.input.addKey(38, () => this.hajo.impulseEngine());
-        this.input.addKey(37, () => this.hajo.lateralThrust(-0.1));
-        this.input.addKey(39, () => this.hajo.lateralThrust(0.1));
+        this.input.addKey(38, () => this.ship.impulseEngine());
+        this.input.addKey(37, () => this.ship.lateralThrust(-0.1));
+        this.input.addKey(39, () => this.ship.lateralThrust(0.1));
 
         this.i = 0;
-        this.kozeli = new Close(this);
-        this.tavoli = new Far(this);
-        this.hajo = new Ship(this);
+        this.close1 = new Close(this);
+        this.far = new Far(this);
+        this.ship = new Ship(this);
 
 
         this.interactive = true;
 
-
-
-
-        setTimeout(()=>this.emitter(),2000);
+        this.iii = setTimeout(()=>this.emitter(),2000);
 
 
     }
@@ -67,31 +58,26 @@ export class DaGame extends View {
         }
 
         this.input.inputLoop();
-
-        this.tavoli.update();
-        this.kozeli.update();
-
-
-
-        this.hajo.update();
+        this.far.update();
+        this.close1.update();
+        this.ship.update();
 
 
-        for (let i = 0; i < this.hajo.tar.length; i++) {
+        for (let i = 0; i < this.ship.mag.length; i++) {
 
             for (let c = 0; c < this.enemyPool.length - 1; c++) {
-                if (this.hajo.tar[i]!=undefined&&Util.excuse4SAT(
-                    this.hajo.tar[i].sprite().position.x,//this.hajo.getB().grafix().x,
-                    this.hajo.tar[i].sprite().position.y,//this.hajo.getB().grafix().y,
+                if (this.ship.mag[i]!=undefined&&Util.excuse4SAT(
+                    this.ship.mag[i].sprite().position.x,//this.ship.getB().grafix().x,
+                    this.ship.mag[i].sprite().position.y,//this.ship.getB().grafix().y,
                     this.enemyPool[c].b.grafix().x,
                     this.enemyPool[c].b.grafix().y,
-                    this.hajo.tar[i].b.s,
+                    this.ship.mag[i].b.s,
                     this.enemyPool[c].b.s) == true) {
 
-                    console.log(" rX ");
-                 this.hajo.tar[i].vege();
-                 this.enemyPool[c].vege();
-                 this.enemyPool.splice(c,1);
-                 this.hajo.tar.splice(i,1);
+                    this.ship.mag[i].end();
+                    this.enemyPool[c].end();
+                    this.enemyPool.splice(c,1);
+                    this.ship.mag.splice(i,1);
 
                 }
             }
@@ -101,22 +87,23 @@ export class DaGame extends View {
         for (let b = 0; b < this.enemyPool.length; b++) {
 
             if (Util.excuse4SAT(
-                this.hajo.getB().grafix().x,
-                this.hajo.getB().grafix().y,
+                this.ship.getB().grafix().x,
+                this.ship.getB().grafix().y,
                 this.enemyPool[b].b.grafix().x,
                 this.enemyPool[b].b.grafix().y,
-                this.hajo.getB().s,
+                this.ship.getB().s,
                 this.enemyPool[b].b.s) == true) {
 
-                this.hajo.sprite().visible = false;
+                this.ship.sprite().visible = false;
 
-                this.hajo.emitter();
+                this.ship.emitter();
 
             }
         }
 
 
-        if(this.hajo.end) {
+        if(this.ship.end) {
+            clearTimeout(this.iii);
             ViewProvider.initView("GO", GameOver);
             ViewProvider.startView("GO");
         }
