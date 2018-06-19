@@ -9,7 +9,7 @@ export class Enemy extends SpaceCraft {
     private readonly ps:PIXI.particles.ParticleContainer;
     private ar:any = [];
     private preY:number;
-    private m:number=50;
+    private m:number=10;
     private d:number=1;
     private n:number=2;
     public b: Bounding;

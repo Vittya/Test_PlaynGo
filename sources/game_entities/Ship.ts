@@ -18,7 +18,7 @@ export class Ship extends SpaceCraft{
     public end:boolean=false;
     private b:Bounding;
     private bozon:any = new Array(30);
-    private m:number=10;
+    private m:number=100;
     private d:number=9;
     private n:number=2;
 
@@ -46,7 +46,7 @@ export class Ship extends SpaceCraft{
 
 
     s.addChild(this.gun);
-    s.addChild(this.b.grafix());
+    //s.addChild(this.b.grafix());
     s.addChild(this.sprite());
         this.ss.on("mousedown", someFunc, this.ss);
 
@@ -72,6 +72,8 @@ export class Ship extends SpaceCraft{
                 }
             }
         }
+
+        this.shipOutofBounds();
 
     }
 
@@ -139,14 +141,25 @@ export class Ship extends SpaceCraft{
         }
 
         this.m+=10;
-        var ii = setTimeout(() => this.emitter(), 200);
-        if(this.m>100){
+        let ii = setTimeout(() => this.emitter(), 200);
+        if(this.m>1000){
             this.sprite().interactive=false;
             this.ss.removeChildren(3);
             this.end=true;
             clearTimeout(ii);
         }
 
+    }
+
+    private shipOutofBounds():void {
+        if (this.sprite().position.y < -100)
+            this.sprite().position.y=650;
+        if(this.sprite().position.y>700)
+            this.sprite().position.y=-50;
+        if(this.sprite().position.x<-100)
+            this.sprite().position.x=850;
+        if(this.sprite().position.x>900)
+            this.sprite().position.x=-50;
     }
 
 

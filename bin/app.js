@@ -253,7 +253,7 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
             this.mag = [];
             this.end = false;
             this.bozon = new Array(30);
-            this.m = 10;
+            this.m = 100;
             this.d = 9;
             this.n = 2;
             this.b = new Bounding_2.Bounding(this.sprite().x, this.sprite().y, 20);
@@ -271,7 +271,6 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
                 this.mag.push(this.rocket);
             };
             s.addChild(this.gun);
-            s.addChild(this.b.grafix());
             s.addChild(this.sprite());
             this.ss.on("mousedown", someFunc, this.ss);
         }
@@ -289,6 +288,7 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
                     }
                 }
             }
+            this.shipOutofBounds();
         }
         lateralThrust(impulse) {
             this.sprite().rotation += impulse;
@@ -328,13 +328,23 @@ define("game_entities/Ship", ["require", "exports", "game_entities/SpaceCraft", 
                 new Explosion_1.Explosion(Util_3.Util.polarToCartesian(s, q)[0] + this.sprite().position.x, Util_3.Util.polarToCartesian(s, q)[1] + this.sprite().position.y, this.ss).update();
             }
             this.m += 10;
-            var ii = setTimeout(() => this.emitter(), 200);
-            if (this.m > 100) {
+            let ii = setTimeout(() => this.emitter(), 200);
+            if (this.m > 1000) {
                 this.sprite().interactive = false;
                 this.ss.removeChildren(3);
                 this.end = true;
                 clearTimeout(ii);
             }
+        }
+        shipOutofBounds() {
+            if (this.sprite().position.y < -100)
+                this.sprite().position.y = 650;
+            if (this.sprite().position.y > 700)
+                this.sprite().position.y = -50;
+            if (this.sprite().position.x < -100)
+                this.sprite().position.x = 850;
+            if (this.sprite().position.x > 900)
+                this.sprite().position.x = -50;
         }
     }
     exports.Ship = Ship;
@@ -427,7 +437,7 @@ define("game_entities/enemy/Enemy", ["require", "exports", "game_entities/SpaceC
         constructor(s) {
             super(PIXI.Texture.fromImage("kp/enemy.png"));
             this.ar = [];
-            this.m = 50;
+            this.m = 10;
             this.d = 1;
             this.n = 2;
             this.sprite().anchor.x = 0.5;
