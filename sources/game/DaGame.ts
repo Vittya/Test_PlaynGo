@@ -113,7 +113,7 @@ export class DaGame extends View {
     private emitter(): void {
     //2 sec as specified
         this.enemyPool.push(new Enemy(this));
-        setTimeout(()=>this.emitter(),2000);
+        this.iii.setTimeout(()=>this.emitter(),2000);
     }
 
 
