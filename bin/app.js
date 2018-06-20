@@ -555,7 +555,7 @@ define("game/DaGame", ["require", "exports", "game/View", "game_entities/Ship", 
         }
         emitter() {
             this.enemyPool.push(new Enemy_1.Enemy(this));
-            this.iii.setTimeout(() => this.emitter(), 2000);
+            setTimeout(() => this.emitter(), 2000);
         }
     }
     exports.DaGame = DaGame;

@@ -104,6 +104,7 @@ export class DaGame extends View {
 
         if(this.ship.end) {
             clearTimeout(this.iii);
+
             ViewProvider.initView("GO", GameOver);
             ViewProvider.startView("GO");
         }
@@ -113,7 +114,7 @@ export class DaGame extends View {
     private emitter(): void {
     //2 sec as specified
         this.enemyPool.push(new Enemy(this));
-        this.iii.setTimeout(()=>this.emitter(),2000);
+        setTimeout(()=>this.emitter(),2000);
     }
 
 
