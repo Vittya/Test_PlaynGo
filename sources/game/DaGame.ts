@@ -73,12 +73,10 @@ export class DaGame extends View {
                     this.enemyPool[c].b.grafix().y,
                     this.ship.mag[i].b.s,
                     this.enemyPool[c].b.s) == true) {
-
                     this.ship.mag[i].end();
                     this.enemyPool[c].end();
                     this.enemyPool.splice(c,1);
                     this.ship.mag.splice(i,1);
-
                 }
             }
         }

@@ -90,7 +90,7 @@ define("eszk/Util", ["require", "exports"], function (require, exports) {
         }
         static cartesianToPolar(x, y) {
             let tmb = [];
-            let o = Math.sqrt((Math.pow(x, 2) * Math.pow(y, 2)));
+            let o = Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2)));
             let szg = Math.atan2(y, x);
             tmb = [o, szg];
             return tmb;
@@ -109,8 +109,8 @@ define("eszk/Util", ["require", "exports"], function (require, exports) {
             return (aX1 < bX2 && aX2 > bX1 && aY1 < bY2 && aY2 > bY1);
         }
         static excuse4SAT(ax, ay, bx, by, as, bs) {
-            let A = (ax - bx);
-            let B = (ay - by);
+            let A = (Math.abs(ax) - Math.abs(bx));
+            let B = (Math.abs(ay) - Math.abs(by));
             let C = A * A + B * B;
             let divergent = Math.sqrt(C);
             return (divergent < as + bs);

@@ -16,7 +16,7 @@ export class Util {
 
     static cartesianToPolar(x: number, y: number): number[] {
         let tmb: number[] = [];
-        let o = Math.sqrt((Math.pow(x, 2) * Math.pow(y, 2)));
+        let o = Math.sqrt((Math.pow(x, 2) + Math.pow(y, 2)));
         let szg = Math.atan2(y, x);
         tmb = [o, szg];
         return tmb;
@@ -42,8 +42,8 @@ export class Util {
     }
 
     public static excuse4SAT(ax:number,ay:number,bx:number,by:number,as:number,bs:number): boolean {
-        let A=(ax - bx);
-        let B=(ay - by);
+        let A=(Math.abs(ax) - Math.abs(bx));
+        let B=(Math.abs(ay) - Math.abs(by));
         let C=A*A+B*B;
 
         let divergent = Math.sqrt(C);
